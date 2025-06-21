@@ -1,0 +1,13 @@
+{
+  "objective": "npx",
+  "strategy": "auto",
+  "mode": "centralized",
+  "maxAgents": 5,
+  "timeout": 60,
+  "parallel": true,
+  "monitor": true,
+  "output": "json",
+  "outputDir": "./reports",
+  "timestamp": "2025-06-21T07:13:39.705Z",
+  "id": "swarm-auto-centralized-1750490019705"
+}
