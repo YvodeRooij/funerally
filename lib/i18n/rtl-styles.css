@@ -1,0 +1,229 @@
+/**
+ * RTL STYLES - Right-to-left layout support
+ * 
+ * Purpose: Provides RTL-specific styling for Arabic language support
+ * Features: Directional overrides, text alignment, layout adjustments
+ */
+
+/* Global RTL styles */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Text alignment utilities */
+.rtl .text-left {
+  text-align: right;
+}
+
+.rtl .text-right {
+  text-align: left;
+}
+
+/* Margin and padding adjustments */
+.rtl .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.rtl .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* Flexbox direction adjustments */
+.rtl .flex-row {
+  flex-direction: row-reverse;
+}
+
+.rtl .flex-row-reverse {
+  flex-direction: row;
+}
+
+/* Border radius adjustments */
+.rtl .rounded-l-lg {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+.rtl .rounded-r-lg {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+/* Icon positioning */
+.rtl .lucide {
+  transform: scaleX(-1);
+}
+
+.rtl .lucide-arrow-right {
+  transform: scaleX(-1);
+}
+
+.rtl .lucide-arrow-left {
+  transform: scaleX(-1);
+}
+
+/* Form elements */
+.rtl input,
+.rtl textarea,
+.rtl select {
+  text-align: right;
+}
+
+.rtl input[type="email"],
+.rtl input[type="url"],
+.rtl input[type="tel"] {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Navigation adjustments */
+.rtl .breadcrumb-separator {
+  transform: scaleX(-1);
+}
+
+/* Dropdown positioning */
+.rtl .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+/* Tooltip positioning */
+.rtl .tooltip {
+  text-align: center;
+}
+
+/* Cultural-specific adjustments */
+.locale-ar {
+  font-family: 'Noto Sans Arabic', 'Segoe UI Arabic', Arial, sans-serif;
+}
+
+.locale-ar .font-bold {
+  font-weight: 600; /* Arabic fonts often look better with medium weight */
+}
+
+.locale-tr {
+  /* Turkish-specific adjustments if needed */
+}
+
+.locale-nl {
+  /* Dutch-specific adjustments if needed */
+}
+
+.locale-en {
+  /* English-specific adjustments if needed */
+}
+
+/* Date and time formatting */
+.rtl .date-display {
+  unicode-bidi: plaintext;
+}
+
+.rtl .time-display {
+  unicode-bidi: plaintext;
+}
+
+/* Cultural color adjustments */
+.locale-ar .accent-color {
+  --accent-color: #1e40af; /* Blue for Arabic contexts */
+}
+
+.locale-tr .accent-color {
+  --accent-color: #dc2626; /* Red for Turkish contexts */
+}
+
+/* Print styles for RTL */
+@media print {
+  .rtl {
+    direction: rtl;
+  }
+  
+  .rtl .print-left {
+    float: right;
+  }
+  
+  .rtl .print-right {
+    float: left;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .rtl,
+  .ltr {
+    border: 1px solid;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .rtl *,
+  .ltr * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus management for RTL */
+.rtl :focus {
+  outline-offset: 2px;
+}
+
+/* Scroll behavior */
+.rtl .scroll-container {
+  scroll-behavior: smooth;
+}
+
+/* Table adjustments */
+.rtl table {
+  direction: rtl;
+}
+
+.rtl th,
+.rtl td {
+  text-align: right;
+}
+
+.rtl th:first-child,
+.rtl td:first-child {
+  text-align: right;
+}
+
+/* Form validation messages */
+.rtl .field-error {
+  text-align: right;
+}
+
+/* Loading states */
+.rtl .loading-spinner {
+  /* Spinner animation remains the same */
+}
+
+/* Accessibility improvements */
+.rtl [role="button"],
+.rtl [role="link"] {
+  cursor: pointer;
+}
+
+/* Mobile-specific RTL adjustments */
+@media (max-width: 768px) {
+  .rtl .mobile-menu {
+    right: auto;
+    left: 0;
+  }
+  
+  .rtl .mobile-nav {
+    text-align: right;
+  }
+}
