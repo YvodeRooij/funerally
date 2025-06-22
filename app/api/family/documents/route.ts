@@ -190,7 +190,6 @@ async function POST(request: NextRequest) {
   }
 }
 
-export { 
-  withErrorHandling(GET) as GET,
-  withErrorHandling(POST) as POST
-};
+export const GET_Handler = withErrorHandling(GET);
+export const POST_Handler = withErrorHandling(POST);
+export { GET_Handler as GET, POST_Handler as POST };

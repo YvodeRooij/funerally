@@ -101,8 +101,7 @@ async function DELETE(request: NextRequest) {
   return createSuccessResponse(null, "Profile deactivated successfully");
 }
 
-export { 
-  withErrorHandling(GET) as GET,
-  withErrorHandling(PUT) as PUT,
-  withErrorHandling(DELETE) as DELETE
-};
+export const GET_Handler = withErrorHandling(GET);
+export const PUT_Handler = withErrorHandling(PUT);
+export const DELETE_Handler = withErrorHandling(DELETE);
+export { GET_Handler as GET, PUT_Handler as PUT, DELETE_Handler as DELETE };

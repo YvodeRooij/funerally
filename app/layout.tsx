@@ -1,25 +1,19 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Playfair_Display } from "next/font/google"
-import "./globals.css"
+import { Inter } from "next/font/google"
+import { Providers } from "./providers"
 import { Navigation } from "@/components/layout/navigation"
-import { Footer } from "@/components/layout/footer"
-import { SessionProvider } from "next-auth/react"
+import { cn } from "@/lib/utils"
+import "./globals.css"
 
-const inter = Inter({
+const inter = Inter({ 
   subsets: ["latin"],
   variable: "--font-inter",
 })
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-})
-
 export const metadata: Metadata = {
-  title: "Farewelly - Digitale Hulp bij Uitvaarten",
-  description: "Modern platform voor families, uitvaartondernemers en locaties om uitvaarten digitaal te regelen",
-    generator: 'v0.dev'
+  title: "Funerally - Modern Memorial Services",
+  description: "Connecting families, funeral directors, and venues with compassion and technology",
 }
 
 export default function RootLayout({
@@ -28,13 +22,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="nl">
-      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
-        <SessionProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn(
+        "min-h-screen bg-background font-sans antialiased",
+        inter.variable
+      )}>
+        <Providers>
           <Navigation />
-          <main className="min-h-screen">{children}</main>
-          <Footer />
-        </SessionProvider>
+          {children}
+        </Providers>
       </body>
     </html>
   )

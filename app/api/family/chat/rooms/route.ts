@@ -144,6 +144,5 @@ function generateRoomTitle(type: string, participants: any[]): string {
   }
 }
 
-export { 
-  withErrorHandling(POST) as POST
-};
+export const POST_Handler = withErrorHandling(POST);
+export { POST_Handler as POST };

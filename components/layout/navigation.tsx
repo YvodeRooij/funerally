@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -39,8 +40,12 @@ interface DemoUser {
 export function Navigation() {
   const { data: session } = useSession()
   const pathname = usePathname()
+  const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [demoUser, setDemoUser] = useState<DemoUser | null>(null)
+  
+  // Extract locale from pathname
+  const locale = pathname.split('/')[1] || 'nl'
 
   useEffect(() => {
     const storedDemoUser = localStorage.getItem("demoUser")
@@ -56,20 +61,20 @@ export function Navigation() {
     if (demoUser) {
       localStorage.removeItem("demoUser")
       setDemoUser(null)
-      window.location.href = "/"
+      window.location.href = `/${locale}`
     } else {
-      await signOut({ callbackUrl: "/" })
+      await signOut({ callbackUrl: `/${locale}` })
     }
   }
 
   const getNavigationItems = () => {
     if (!currentUser) {
       return [
-        { href: "/how-it-works", label: "Hoe het werkt", icon: FileText },
-        { href: "/for-families", label: "Voor families", icon: Users },
-        { href: "/for-directors", label: "Voor ondernemers", icon: Building },
-        { href: "/for-venues", label: "Voor locaties", icon: MapPin },
-        { href: "/contact", label: "Contact", icon: MessageSquare },
+        { href: `/${locale}/how-it-works`, label: "Hoe het werkt", icon: FileText },
+        { href: `/${locale}/for-families`, label: "Voor families", icon: Users },
+        { href: `/${locale}/for-directors`, label: "Voor ondernemers", icon: Building },
+        { href: `/${locale}/for-venues`, label: "Voor locaties", icon: MapPin },
+        { href: `/${locale}/contact`, label: "Contact", icon: MessageSquare },
       ]
     }
 
@@ -78,34 +83,34 @@ export function Navigation() {
     switch (userType) {
       case "family":
         return [
-          { href: "/(family)/dashboard", label: "Dashboard", icon: Home },
-          { href: "/(family)/documents", label: "Documenten", icon: FileText },
-          { href: "/(family)/chat", label: "Chat", icon: MessageSquare },
-          { href: "/(shared)/venues", label: "Locaties", icon: MapPin },
+          { href: `/${locale}/family`, label: "Dashboard", icon: Home },
+          { href: `/${locale}/family/documents`, label: "Documenten", icon: FileText },
+          { href: `/${locale}/family/chat`, label: "Chat", icon: MessageSquare },
+          { href: `/${locale}/venues`, label: "Locaties", icon: MapPin },
         ]
 
       case "director":
         return [
-          { href: "/(director)/dashboard", label: "Dashboard", icon: Home },
-          { href: "/(director)/clients", label: "Cliënten", icon: Users },
-          { href: "/(director)/calendar", label: "Agenda", icon: Calendar },
-          { href: "/(shared)/venues", label: "Locaties", icon: MapPin },
+          { href: `/${locale}/director`, label: "Dashboard", icon: Home },
+          { href: `/${locale}/director/clients`, label: "Cliënten", icon: Users },
+          { href: `/${locale}/director/calendar`, label: "Agenda", icon: Calendar },
+          { href: `/${locale}/venues`, label: "Locaties", icon: MapPin },
         ]
 
       case "venue":
         return [
-          { href: "/(venue)/dashboard", label: "Dashboard", icon: Home },
-          { href: "/(venue)/bookings", label: "Boekingen", icon: Calendar },
-          { href: "/(venue)/availability", label: "Beschikbaarheid", icon: Building },
+          { href: `/${locale}/venue`, label: "Dashboard", icon: Home },
+          { href: `/${locale}/venue/bookings`, label: "Boekingen", icon: Calendar },
+          { href: `/${locale}/venue/availability`, label: "Beschikbaarheid", icon: Building },
         ]
 
       default:
         return [
-          { href: "/how-it-works", label: "Hoe het werkt", icon: FileText },
-          { href: "/for-families", label: "Voor families", icon: Users },
-          { href: "/for-directors", label: "Voor ondernemers", icon: Building },
-          { href: "/for-venues", label: "Voor locaties", icon: MapPin },
-          { href: "/contact", label: "Contact", icon: MessageSquare },
+          { href: `/${locale}/how-it-works`, label: "Hoe het werkt", icon: FileText },
+          { href: `/${locale}/for-families`, label: "Voor families", icon: Users },
+          { href: `/${locale}/for-directors`, label: "Voor ondernemers", icon: Building },
+          { href: `/${locale}/for-venues`, label: "Voor locaties", icon: MapPin },
+          { href: `/${locale}/contact`, label: "Contact", icon: MessageSquare },
         ]
     }
   }
@@ -117,7 +122,7 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href={`/${locale}`} className="flex items-center space-x-2">
             <Flower2 className="h-8 w-8 text-blue-600" />
             <span className="text-xl font-bold text-slate-900">Farewelly</span>
           </Link>
@@ -170,7 +175,7 @@ export function Navigation() {
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile" className="flex items-center">
+                    <Link href={`/${locale}/profile`} className="flex items-center">
                       <Settings className="mr-2 h-4 w-4" />
                       Profiel
                     </Link>
@@ -184,7 +189,7 @@ export function Navigation() {
               </DropdownMenu>
             ) : (
               <Button asChild>
-                <Link href="/signin">Inloggen</Link>
+                <Link href={`/${locale}/signin`}>Inloggen</Link>
               </Button>
             )}
 
@@ -221,7 +226,7 @@ export function Navigation() {
               {!isLoggedIn && (
                 <div className="pt-4 border-t border-slate-200">
                   <Link
-                    href="/signin"
+                    href={`/${locale}/signin`}
                     className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                     onClick={() => setMobileMenuOpen(false)}
                   >

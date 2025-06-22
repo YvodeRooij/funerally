@@ -1,0 +1,148 @@
+{
+  "analysis_timestamp": "2025-06-22T10:30:00Z",
+  "next_js_version": "15",
+  "issue": "params must be awaited in server components due to async nature in Next.js 15",
+  "affected_files": [
+    {
+      "file_path": "/workspaces/funerally/app/[locale]/layout.tsx",
+      "type": "layout",
+      "priority": "CRITICAL",
+      "line_numbers": [19, 22],
+      "current_pattern": "params: { locale }",
+      "required_fix": "params: Promise<{ locale: string }> with const { locale } = await params;",
+      "dynamic_segments": ["locale"],
+      "is_server_component": true,
+      "has_async_function": true,
+      "complexity": "medium"
+    },
+    {
+      "file_path": "/workspaces/funerally/app/[locale]/features/venues/[id]/page.tsx",
+      "type": "page",
+      "priority": "HIGH",
+      "line_numbers": [9, 12],
+      "current_pattern": "{ params }: VenueDetailPageProps",
+      "required_fix": "{ params }: { params: Promise<{ id: string }> } with const { id } = await params;",
+      "dynamic_segments": ["locale", "id"],
+      "is_server_component": true,
+      "has_async_function": false,
+      "complexity": "low"
+    },
+    {
+      "file_path": "/workspaces/funerally/app/[locale]/features/venues/[id]/book/page.tsx",
+      "type": "page",
+      "priority": "HIGH",
+      "line_numbers": [9, 12],
+      "current_pattern": "{ params }: VenueBookingPageProps",
+      "required_fix": "{ params }: { params: Promise<{ id: string }> } with const { id } = await params;",
+      "dynamic_segments": ["locale", "id"],
+      "is_server_component": true,
+      "has_async_function": false,
+      "complexity": "low"
+    },
+    {
+      "file_path": "/workspaces/funerally/app/[locale]/(shared)/venues/[id]/page.tsx",
+      "type": "page",
+      "priority": "HIGH",
+      "line_numbers": [9, 10],
+      "current_pattern": "{ params }: VenueDetailPageProps",
+      "required_fix": "{ params }: { params: Promise<{ id: string }> } with const { id } = await params;",
+      "dynamic_segments": ["locale", "id"],
+      "is_server_component": false,
+      "has_async_function": false,
+      "complexity": "low",
+      "note": "Client component - may need different approach"
+    },
+    {
+      "file_path": "/workspaces/funerally/app/[locale]/(shared)/venues/[id]/book/page.tsx",
+      "type": "page",
+      "priority": "MEDIUM",
+      "line_numbers": [9, 12],
+      "current_pattern": "{ params }: VenueBookingPageProps",
+      "required_fix": "{ params }: { params: Promise<{ id: string }> } with const { id } = await params;",
+      "dynamic_segments": ["locale", "id"],
+      "is_server_component": true,
+      "has_async_function": false,
+      "complexity": "low"
+    },
+    {
+      "file_path": "/workspaces/funerally/app/[locale]/(provider)/clients/[id]/page.tsx",
+      "type": "page",
+      "priority": "MEDIUM",
+      "line_numbers": [9, 10],
+      "current_pattern": "{ params }: ClientDetailPageProps",
+      "required_fix": "{ params }: { params: Promise<{ id: string }> } with const { id } = await params;",
+      "dynamic_segments": ["locale", "id"],
+      "is_server_component": false,
+      "has_async_function": false,
+      "complexity": "low",
+      "note": "Client component - may need different approach"
+    },
+    {
+      "file_path": "/workspaces/funerally/app/[locale]/(dashboard)/director/clients/[id]/page.tsx",
+      "type": "page",
+      "priority": "MEDIUM",
+      "line_numbers": [9, 10],
+      "current_pattern": "{ params }: ClientDetailPageProps",
+      "required_fix": "{ params }: { params: Promise<{ id: string }> } with const { id } = await params;",
+      "dynamic_segments": ["locale", "id"],
+      "is_server_component": true,
+      "has_async_function": false,
+      "complexity": "low"
+    }
+  ],
+  "client_components_using_useParams": [
+    {
+      "file_path": "/workspaces/funerally/app/[locale]/director/venues/[id]/page.tsx",
+      "type": "page",
+      "priority": "NONE",
+      "line_numbers": [27, 28],
+      "current_pattern": "const params = useParams(); const venueId = params.id",
+      "required_fix": "No change needed - useParams() handles async internally",
+      "dynamic_segments": ["locale", "id"],
+      "is_server_component": false,
+      "has_async_function": false,
+      "complexity": "none"
+    },
+    {
+      "file_path": "/workspaces/funerally/app/[locale]/director/venues/[id]/book/page.tsx",
+      "type": "page",
+      "priority": "NONE",
+      "line_numbers": [16, 17],
+      "current_pattern": "const params = useParams(); const venueId = params.id",
+      "required_fix": "No change needed - useParams() handles async internally",
+      "dynamic_segments": ["locale", "id"],
+      "is_server_component": false,
+      "has_async_function": false,
+      "complexity": "none"
+    }
+  ],
+  "summary": {
+    "total_files_affected": 7,
+    "critical_priority": 1,
+    "high_priority": 3,
+    "medium_priority": 3,
+    "server_components": 5,
+    "client_components": 2,
+    "layout_files": 1,
+    "page_files": 6
+  },
+  "fix_patterns": {
+    "server_component_with_params": {
+      "before": "export default function Component({ params }: { params: { id: string } }) { return <div>{params.id}</div> }",
+      "after": "export default async function Component({ params }: { params: Promise<{ id: string }> }) { const { id } = await params; return <div>{id}</div> }"
+    },
+    "client_component_with_params": {
+      "before": "export default function Component({ params }: { params: { id: string } }) { return <div>{params.id}</div> }",
+      "after": "\"use client\"\nexport default function Component() { const params = useParams(); return <div>{params.id}</div> }"
+    }
+  },
+  "recommended_fix_order": [
+    "app/[locale]/layout.tsx",
+    "app/[locale]/features/venues/[id]/page.tsx",
+    "app/[locale]/features/venues/[id]/book/page.tsx",
+    "app/[locale]/(shared)/venues/[id]/page.tsx",
+    "app/[locale]/(shared)/venues/[id]/book/page.tsx",
+    "app/[locale]/(provider)/clients/[id]/page.tsx",
+    "app/[locale]/(dashboard)/director/clients/[id]/page.tsx"
+  ]
+}

@@ -15,10 +15,11 @@ import { UpdateBookingRequest } from "@/types/api";
 
 async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await requireUserType(request, ["family"]);
-  const bookingId = params.id;
+  const { id } = await params;
+  const bookingId = id;
 
   const profile = await getUserProfile(session.user.email!);
   if (!profile) {
@@ -50,10 +51,11 @@ async function GET(
 
 async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await requireUserType(request, ["family"]);
-  const bookingId = params.id;
+  const { id } = await params;
+  const bookingId = id;
   const body: UpdateBookingRequest = await request.json();
 
   const profile = await getUserProfile(session.user.email!);
@@ -144,10 +146,11 @@ async function PUT(
 
 async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await requireUserType(request, ["family"]);
-  const bookingId = params.id;
+  const { id } = await params;
+  const bookingId = id;
 
   const profile = await getUserProfile(session.user.email!);
   if (!profile) {
@@ -211,8 +214,7 @@ async function DELETE(
   return createSuccessResponse(booking, "Booking cancelled successfully");
 }
 
-export { 
-  withErrorHandling(GET) as GET,
-  withErrorHandling(PUT) as PUT,
-  withErrorHandling(DELETE) as DELETE
-};
+export const GET_Handler = withErrorHandling(GET);
+export const PUT_Handler = withErrorHandling(PUT);
+export const DELETE_Handler = withErrorHandling(DELETE);
+export { GET_Handler as GET, PUT_Handler as PUT, DELETE_Handler as DELETE };

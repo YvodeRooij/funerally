@@ -244,6 +244,5 @@ async function GET(request: NextRequest) {
   return createSuccessResponse(analyticsData, "Analytics data retrieved successfully");
 }
 
-export { 
-  withErrorHandling(GET) as GET
-};
+export const GET_Handler = withErrorHandling(GET);
+export { GET_Handler as GET };

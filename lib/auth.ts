@@ -26,6 +26,8 @@ const ROLE_PERMISSIONS = {
 }
 
 export const authOptions: NextAuthOptions = {
+  // Add secret for production security
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -150,8 +152,8 @@ export const authOptions: NextAuthOptions = {
     }
   },
   pages: {
-    signIn: "/auth/signin",
-    newUser: "/auth/onboarding",
+    signIn: "/signin",
+    newUser: "/onboarding",
     error: "/auth/error",
   },
   session: {
@@ -174,5 +176,6 @@ export const authOptions: NextAuthOptions = {
       console.log("User signed out:", session?.user?.email)
     }
   },
-  debug: process.env.NODE_ENV === "development",
+  // Debug mode only if explicitly enabled via environment variable
+  debug: process.env.NEXTAUTH_DEBUG === "true",
 }

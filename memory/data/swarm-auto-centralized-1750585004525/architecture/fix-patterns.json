@@ -1,0 +1,119 @@
+{
+  "nextjs15ParamsAwaitFix": {
+    "problemDescription": "Next.js 15 requires params to be awaited as they are now Promise objects",
+    "transformationPatterns": {
+      "layoutFiles": {
+        "before": {
+          "functionSignature": "export default async function Layout({\n  children,\n  params: { paramName }\n}: {\n  children: React.ReactNode;\n  params: { paramName: string };\n})",
+          "paramsUsage": "Direct destructuring in function signature"
+        },
+        "after": {
+          "functionSignature": "export default async function Layout({\n  children,\n  params\n}: {\n  children: React.ReactNode;\n  params: Promise<{ paramName: string }>;\n})",
+          "paramsUsage": "const { paramName } = await params;"
+        }
+      },
+      "pageFiles": {
+        "before": {
+          "functionSignature": "export default async function Page({\n  params: { paramName },\n  searchParams\n}: {\n  params: { paramName: string };\n  searchParams?: { [key: string]: string | string[] | undefined };\n})",
+          "paramsUsage": "Direct destructuring in function signature"
+        },
+        "after": {
+          "functionSignature": "export default async function Page({\n  params,\n  searchParams\n}: {\n  params: Promise<{ paramName: string }>;\n  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;\n})",
+          "paramsUsage": "const { paramName } = await params;\nconst resolvedSearchParams = await searchParams;"
+        }
+      },
+      "componentFiles": {
+        "before": {
+          "functionSignature": "export default async function Component({\n  params: { paramName }\n}: {\n  params: { paramName: string };\n})",
+          "paramsUsage": "Direct destructuring in function signature"
+        },
+        "after": {
+          "functionSignature": "export default async function Component({\n  params\n}: {\n  params: Promise<{ paramName: string }>;\n})",
+          "paramsUsage": "const { paramName } = await params;"
+        }
+      }
+    },
+    "templates": {
+      "layoutTemplate": {
+        "description": "Template for layout.tsx files with dynamic routes",
+        "code": "export default async function Layout({\n  children,\n  params\n}: {\n  children: React.ReactNode;\n  params: Promise<{ [key: string]: string }>;\n}) {\n  const resolvedParams = await params;\n  // Extract specific params as needed\n  // const { locale, slug, id } = resolvedParams;\n  \n  return (\n    <div>\n      {children}\n    </div>\n  );\n}"
+      },
+      "pageTemplate": {
+        "description": "Template for page.tsx files with dynamic routes and search params",
+        "code": "export default async function Page({\n  params,\n  searchParams\n}: {\n  params: Promise<{ [key: string]: string }>;\n  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;\n}) {\n  const resolvedParams = await params;\n  const resolvedSearchParams = searchParams ? await searchParams : {};\n  \n  // Extract specific params as needed\n  // const { locale, slug, id } = resolvedParams;\n  \n  return (\n    <div>\n      {/* Page content */}\n    </div>\n  );\n}"
+      },
+      "generateStaticParamsTemplate": {
+        "description": "Template for generateStaticParams function",
+        "code": "export async function generateStaticParams() {\n  // Return array of param objects\n  return [\n    { paramName: 'value1' },\n    { paramName: 'value2' }\n  ];\n}"
+      }
+    },
+    "specificTransformations": {
+      "localeLayout": {
+        "filePath": "app/[locale]/layout.tsx",
+        "before": "export default async function LocaleLayout({\n  children,\n  params: { locale }\n}: {\n  children: React.ReactNode;\n  params: { locale: string };\n}) {",
+        "after": "export default async function LocaleLayout({\n  children,\n  params\n}: {\n  children: React.ReactNode;\n  params: Promise<{ locale: string }>;\n}) {\n  const { locale } = await params;",
+        "firstLineOfBody": "const { locale } = await params;"
+      }
+    },
+    "implementationSequence": {
+      "phase1": {
+        "description": "Fix root level layouts first",
+        "files": ["app/[locale]/layout.tsx"],
+        "priority": "critical",
+        "dependencies": []
+      },
+      "phase2": {
+        "description": "Fix page files that depend on layouts",
+        "filePatterns": ["app/[locale]/**/page.tsx", "app/**/[*]/page.tsx"],
+        "priority": "high",
+        "dependencies": ["phase1"]
+      },
+      "phase3": {
+        "description": "Fix nested layouts and components",
+        "filePatterns": ["app/**/[*]/layout.tsx", "app/**/**/[*]/layout.tsx"],
+        "priority": "medium", 
+        "dependencies": ["phase1"]
+      },
+      "phase4": {
+        "description": "Fix remaining components with params",
+        "filePatterns": ["app/**/*.tsx"],
+        "priority": "low",
+        "dependencies": ["phase1", "phase2", "phase3"]
+      }
+    },
+    "errorPrevention": {
+      "commonMistakes": [
+        "Forgetting to await params before destructuring",
+        "Not updating TypeScript types to Promise<>",
+        "Missing async keyword on component function",
+        "Trying to destructure searchParams without awaiting"
+      ],
+      "validationChecks": [
+        "Ensure all params are awaited before use",
+        "Verify TypeScript types are Promise<> wrapped",
+        "Check function is marked as async",
+        "Validate no direct destructuring in function signature"
+      ],
+      "testingStrategy": [
+        "Test with different locale values",
+        "Verify generateStaticParams still works",
+        "Check nested dynamic routes",
+        "Validate searchParams handling"
+      ]
+    },
+    "batchOperations": {
+      "searchPatterns": [
+        "params:\\s*{[^}]+}",
+        "params:\\s*{\\s*[^}]+\\s*}",
+        "export\\s+default\\s+async\\s+function\\s+\\w+\\s*\\([^)]*params:\\s*{[^}]*}",
+        "\\{[^}]*params:\\s*{[^}]*}[^}]*\\}"
+      ],
+      "replacePatterns": {
+        "functionSignature": {
+          "find": "(export\\s+default\\s+async\\s+function\\s+\\w+\\s*\\([^)]*),\\s*params:\\s*{\\s*([^}]+)\\s*}([^)]*)\\)\\s*:\\s*{([^{]*params:\\s*{[^}]*})([^}]*)};?",
+          "replace": "$1, params$3): { $4: Promise<{ $2 }>$5};"
+        }
+      }
+    }
+  }
+}

@@ -195,6 +195,5 @@ function calculateDistance(address1?: string, address2?: string): number {
   return Math.floor(Math.random() * 50) + 1; // Random distance between 1-50 km
 }
 
-export { 
-  withErrorHandling(GET) as GET
-};
+export const GET_Handler = withErrorHandling(GET);
+export { GET_Handler as GET };

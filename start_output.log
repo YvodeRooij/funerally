@@ -1,0 +1,22 @@
+
+> my-v0-project@0.1.0 start
+> next start
+
+   ▲ Next.js 15.2.4
+   - Local:        http://localhost:3000
+   - Network:      http://10.0.0.104:3000
+
+ ✓ Starting...
+ ✓ Ready in 449ms
+ ⨯ [Error: Cannot find module './vendor-chunks/@radix-ui.js'
+Require stack:
+- /workspaces/funerally/.next/server/webpack-runtime.js
+- /workspaces/funerally/.next/server/pages/_document.js
+- /workspaces/funerally/node_modules/next/dist/server/require.js
+- /workspaces/funerally/node_modules/next/dist/server/next-server.js
+- /workspaces/funerally/node_modules/next/dist/server/next.js
+- /workspaces/funerally/node_modules/next/dist/server/lib/start-server.js
+- /workspaces/funerally/node_modules/next/dist/cli/next-start.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
