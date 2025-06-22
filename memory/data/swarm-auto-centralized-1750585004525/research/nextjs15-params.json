@@ -1,0 +1,73 @@
+{
+  "title": "Next.js 15 Params Await Breaking Change Research",
+  "timestamp": "2025-06-22T10:30:00Z",
+  "summary": "Comprehensive analysis of Next.js 15 breaking change requiring await for dynamic APIs including params and searchParams",
+  "breaking_change": {
+    "what_changed": "Dynamic APIs that rely on runtime information are now asynchronous instead of synchronous",
+    "affected_apis": [
+      "params (in layout.js, page.js, route.js, default.js, opengraph-image, twitter-image, icon, apple-icon)",
+      "searchParams (in pages)",
+      "cookies()",
+      "headers()",
+      "draftMode()"
+    ],
+    "root_cause": "Next.js transitioned these APIs to be asynchronous to enable better streaming SSR, parallel data fetching, and improved server component support. This allows Next.js to start rendering synchronous parts immediately while fetching request-specific data asynchronously."
+  },
+  "migration_patterns": {
+    "server_components": {
+      "before": "export default function Page({ params }) {\n  const { id } = params;\n  return <p>ID: {id}</p>\n}",
+      "after": "export default async function Page({ params }) {\n  const { id } = await params;\n  return <p>ID: {id}</p>\n}"
+    },
+    "client_components": {
+      "pattern": "'use client'\nimport { use } from 'react';\n\nexport default function Page({ params }) {\n  const { id } = use(params);\n  return <p>ID: {id}</p>\n}",
+      "note": "Client components cannot be async, so use React.use() to unwrap promises"
+    },
+    "route_handlers": {
+      "before": "export async function GET(request, { params }) {\n  const { id } = params;\n  // handle request\n}",
+      "after": "export async function GET(request, { params }) {\n  const { id } = await params;\n  // handle request\n}"
+    }
+  },
+  "migration_tools": {
+    "automatic_codemod": {
+      "command": "npx @next/codemod@canary next-async-request-api .",
+      "note": "Cannot cover all cases, manual adjustment may be needed"
+    },
+    "temporary_sync_access": {
+      "pattern": "import { type UnsafeUnwrappedParams } from 'next/headers';\n\nconst params = props.params as unknown as UnsafeUnwrappedParams;",
+      "warning": "Will show warnings in development and production. Not recommended for production use."
+    }
+  },
+  "common_patterns_to_fix": [
+    "Direct property access: params.id -> (await params).id",
+    "Object destructuring: const { id } = params -> const { id } = await params",
+    "Object spreading: {...params} -> {...await params}",
+    "Object.keys(): Object.keys(params) -> Object.keys(await params)",
+    "Iteration: for (const key in params) -> for (const key in await params)"
+  ],
+  "error_messages": [
+    "`params` should be awaited before using its properties",
+    "Dynamic APIs are asynchronous",
+    "sync-dynamic-apis warning"
+  ],
+  "benefits": [
+    "Enhanced Streaming SSR: Async parameters help render content faster",
+    "Parallel Data Fetching: Parameters fetched concurrently with other data",
+    "Better Server Component Support: Aligns with React 19's server components",
+    "More static rendering opportunities by delaying Promise unwrapping"
+  ],
+  "documentation_sources": [
+    "https://nextjs.org/docs/messages/sync-dynamic-apis",
+    "https://nextjs.org/docs/app/guides/upgrading/version-15",
+    "https://nextjs.org/blog/next-15"
+  ],
+  "implementation_checklist": [
+    "Make page/layout functions async where params/searchParams are used",
+    "Add await keyword before params/searchParams access",
+    "Use React.use() for client components",
+    "Update route handlers to await params",
+    "Check for object operations (spreading, keys, iteration) on params",
+    "Run the codemod for automatic migration",
+    "Test all dynamic routes and API endpoints",
+    "Remove temporary synchronous access patterns"
+  ]
+}

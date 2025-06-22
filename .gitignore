@@ -25,31 +25,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# logs
-logs/
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
-
-# VSCode
-.vscode/
-
-# Build
-build/
-dist/
-
-# Misc
-*.swp
-*.swo
-
-# Test
-coverage/
-
-# pnpm
-.pnpm-store/
-
-# Claude
-.claude/

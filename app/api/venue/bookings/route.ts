@@ -303,7 +303,6 @@ async function PUT(request: NextRequest) {
   return createSuccessResponse(booking, `Booking ${action}ed successfully`);
 }
 
-export { 
-  withErrorHandling(GET) as GET,
-  withErrorHandling(PUT) as PUT
-};
+export const GET_Handler = withErrorHandling(GET);
+export const PUT_Handler = withErrorHandling(PUT);
+export { GET_Handler as GET, PUT_Handler as PUT };

@@ -14,10 +14,6 @@ const nextConfig = {
     unoptimized: true,
   },
   // Internationalization configuration
-  experimental: {
-    // Enable the new App Router
-    appDir: true,
-  },
   // Ensure proper handling of locale-based routing
   trailingSlash: false,
   // Optimize for multi-language content

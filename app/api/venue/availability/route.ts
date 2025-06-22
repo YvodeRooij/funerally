@@ -333,8 +333,7 @@ async function PUT(request: NextRequest) {
   );
 }
 
-export { 
-  withErrorHandling(GET) as GET,
-  withErrorHandling(POST) as POST,
-  withErrorHandling(PUT) as PUT
-};
+export const GET_Handler = withErrorHandling(GET);
+export const POST_Handler = withErrorHandling(POST);
+export const PUT_Handler = withErrorHandling(PUT);
+export { GET_Handler as GET, POST_Handler as POST, PUT_Handler as PUT };
