@@ -15,6 +15,7 @@ import { ArrowLeft, ArrowRight, Save, Heart, Check, Loader2 } from "lucide-react
 import { AIGuidanceAssistant } from "@/components/ai/ai-guidance-assistant"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { debounce } from "lodash"
+import { isDemoMode, createDemoSession, getDemoModeInfo } from "@/lib/demo-mode"
 
 interface FormData {
   deceasedName: string
@@ -45,6 +46,9 @@ export function IntakeWizard() {
   const router = useRouter()
   const supabase = createClientComponentClient()
   
+  // TODO PRODUCTION: Remove demo session - use only real session
+  const effectiveSession = session || (isDemoMode() ? createDemoSession('family') : null)
+  
   const [currentStep, setCurrentStep] = useState(0)
   const [intakeId, setIntakeId] = useState<string | null>(null)
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle")
@@ -71,6 +75,27 @@ export function IntakeWizard() {
   // Load existing intake on mount
   useEffect(() => {
     const loadExistingIntake = async () => {
+      // TODO PRODUCTION: Remove demo mode handling - use only real session
+      if (isDemoMode() && !session?.user?.id) {
+        console.log('🎭 Demo: Loading demo intake data')
+        setIntakeId('demo-intake-123')
+        
+        // Restore saved demo data from localStorage
+        const savedDemoData = localStorage.getItem('demo-intake-data')
+        if (savedDemoData) {
+          try {
+            const { formData: savedFormData, currentStep: savedStep, lastSaved } = JSON.parse(savedDemoData)
+            setFormData(savedFormData)
+            setCurrentStep(savedStep)
+            setLastSaved(new Date(lastSaved))
+            console.log('🔄 Demo: Restored saved form data')
+          } catch (error) {
+            console.error('Error parsing saved demo data:', error)
+          }
+        }
+        return
+      }
+      
       if (!session?.user?.id) return
 
       const { data: existingIntake } = await supabase
@@ -109,13 +134,28 @@ export function IntakeWizard() {
     loadExistingIntake()
   }, [session])
 
-  // Auto-save function
+  // Auto-save function - works in both demo and production mode
   const autoSave = useCallback(async () => {
-    if (!intakeId || !session?.user?.id) return
+    if (!intakeId || !effectiveSession?.user?.id) return
 
     setSaveStatus("saving")
 
     try {
+      // Demo mode: Save to localStorage for persistence
+      if (isDemoMode() && !session?.user?.id) {
+        console.log('🎭 Demo: Auto-saving to localStorage')
+        localStorage.setItem('demo-intake-data', JSON.stringify({
+          formData,
+          currentStep,
+          lastSaved: new Date().toISOString()
+        }))
+        setSaveStatus("saved")
+        setLastSaved(new Date())
+        setTimeout(() => setSaveStatus("idle"), 2000)
+        return
+      }
+
+      // Production mode: Save to database
       const { error } = await supabase
         .from('family_intakes')
         .update({
@@ -136,7 +176,7 @@ export function IntakeWizard() {
       console.error("Auto-save error:", error)
       setSaveStatus("error")
     }
-  }, [intakeId, formData, currentStep, session])
+  }, [intakeId, formData, currentStep, effectiveSession, session])
 
   // Debounced auto-save
   const debouncedAutoSave = useCallback(
@@ -177,15 +217,57 @@ export function IntakeWizard() {
   }
 
   const handleGenerateReport = async () => {
-    if (!intakeId || !session?.user?.id) return
+    if (!intakeId || !effectiveSession?.user?.id) return
 
     setIsGeneratingReport(true)
 
     try {
-      // First, ensure final save
+      // First, ensure final save in both modes
       await autoSave()
 
-      // Mark intake as completed
+      // Demo mode: Save to localStorage and use demo API with real LangGraph logic
+      if (isDemoMode() && !session?.user?.id) {
+        console.log('🎭 Demo: Generating report with real LangGraph logic')
+        
+        // Save completed state to localStorage
+        localStorage.setItem('demo-intake-data', JSON.stringify({
+          formData,
+          currentStep,
+          completed: true,
+          completed_at: new Date().toISOString(),
+          lastSaved: new Date().toISOString()
+        }))
+
+        // Use demo API but with real LangGraph processing
+        const response = await fetch('/api/demo/generate-report', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            intakeId,
+            formData,
+            userId: effectiveSession.user.id,
+            useLangGraph: true // Flag to ensure real AI processing
+          })
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          console.log('✅ Demo report generated with LangGraph:', result)
+          router.push(`/family/dashboard`)
+        } else {
+          const error = await response.json()
+          console.error('❌ Demo report failed:', error)
+          setSaveStatus("error")
+        }
+        return
+      }
+
+      // Production mode: Save to database and use production API with LangGraph
+      console.log('🏭 Production: Generating report with LangGraph logic')
+      
+      // Mark intake as completed in database
       await supabase
         .from('family_intakes')
         .update({
@@ -194,7 +276,7 @@ export function IntakeWizard() {
         })
         .eq('id', intakeId)
 
-      // Generate report via API
+      // Generate report via production API with LangGraph
       const response = await fetch('/api/generate-intake-report', {
         method: 'POST',
         headers: {
@@ -203,17 +285,17 @@ export function IntakeWizard() {
         body: JSON.stringify({
           intakeId,
           formData,
-          userId: session.user.id
+          userId: effectiveSession.user.id
         }),
       })
 
       if (response.ok) {
-        const { reportId } = await response.json()
-        
-        // Redirect to documents page with report ID
-        router.push(`/family/documents?reportId=${reportId}`)
+        const result = await response.json()
+        console.log('✅ Production report generated with LangGraph:', result)
+        router.push(`/family/dashboard`)
       } else {
-        console.error('Report generation failed')
+        const error = await response.json()
+        console.error('❌ Production report failed:', error)
         setSaveStatus("error")
       }
     } catch (error) {
@@ -226,6 +308,16 @@ export function IntakeWizard() {
 
   return (
     <div className="max-w-2xl mx-auto">
+      {/* TODO PRODUCTION: Remove demo mode indicator */}
+      {isDemoMode() && (
+        <div className="mb-4 bg-amber-50 border border-amber-200 rounded-lg p-3">
+          <div className="flex items-center gap-2">
+            <span className="text-amber-600">⚠️</span>
+            <span className="text-amber-800 text-sm font-medium">Demo Mode Active</span>
+            <span className="text-amber-700 text-xs">- Using mock data for testing</span>
+          </div>
+        </div>
+      )}
       {/* Progress Header */}
       <Card className="mb-6 border-purple-200 bg-purple-50/50">
         <CardContent className="p-6">

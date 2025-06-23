@@ -3,98 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth-supabase"
 import { getServiceSupabaseClient } from "@/lib/supabase"
 import { encrypt } from "@/lib/encryption"
-
-// LangGraph report generation (placeholder for actual implementation)
-async function generateAIReport(intakeData: any, chatHistory: any[]) {
-  // TODO: Integrate actual LangGraph JS here
-  // For now, create a structured report based on intake data
-  
-  const report = {
-    generated_at: new Date().toISOString(),
-    family_situation: {
-      deceased_name: intakeData.deceasedName,
-      date_of_death: intakeData.dateOfDeath,
-      relationship: intakeData.relationship,
-      urgency_level: "normal"
-    },
-    service_preferences: {
-      type: intakeData.serviceType,
-      location: intakeData.location,
-      expected_attendees: intakeData.attendees,
-      cultural_requirements: intakeData.culturalRequirements || []
-    },
-    financial_situation: {
-      has_insurance: intakeData.hasInsurance,
-      insurance_provider: intakeData.insuranceProvider,
-      needs_financial_help: intakeData.needsFinancialHelp,
-      gemeente: intakeData.gemeente,
-      estimated_budget_range: calculateBudgetRange(intakeData)
-    },
-    special_requests: intakeData.specialRequests,
-    ai_recommendations: {
-      suitable_directors: [],
-      venue_suggestions: [],
-      service_recommendations: [],
-      cost_optimization_tips: []
-    },
-    conversation_insights: analyzeConversations(chatHistory)
-  }
-
-  return report
-}
-
-function calculateBudgetRange(intakeData: any) {
-  // Simple budget estimation based on service type and attendees
-  const baseRanges = {
-    burial: { min: 5000, max: 15000 },
-    cremation: { min: 3000, max: 10000 },
-    memorial: { min: 1000, max: 5000 },
-    unsure: { min: 3000, max: 15000 }
-  }
-
-  const attendeeMultiplier = {
-    "0-25": 1,
-    "25-50": 1.3,
-    "50-100": 1.6,
-    "100+": 2
-  }
-
-  const base = baseRanges[intakeData.serviceType as keyof typeof baseRanges] || baseRanges.unsure
-  const multiplier = attendeeMultiplier[intakeData.attendees as keyof typeof attendeeMultiplier] || 1
-
-  return {
-    min: Math.round(base.min * multiplier),
-    max: Math.round(base.max * multiplier)
-  }
-}
-
-function analyzeConversations(chatHistory: any[]) {
-  // Analyze chat history for insights
-  const insights = {
-    main_concerns: [],
-    emotional_state: "processing",
-    questions_asked: chatHistory.filter(m => m.type === "user").length,
-    preferred_communication_style: "supportive",
-    additional_notes: []
-  }
-
-  // Extract concerns from conversations
-  const userMessages = chatHistory.filter(m => m.type === "user").map(m => m.message)
-  
-  if (userMessages.some(m => m.toLowerCase().includes("budget") || m.toLowerCase().includes("kosten"))) {
-    insights.main_concerns.push("cost_conscious")
-  }
-  
-  if (userMessages.some(m => m.toLowerCase().includes("snel") || m.toLowerCase().includes("urgent"))) {
-    insights.main_concerns.push("time_sensitive")
-  }
-
-  if (userMessages.some(m => m.toLowerCase().includes("traditie") || m.toLowerCase().includes("cultuur"))) {
-    insights.main_concerns.push("cultural_requirements")
-  }
-
-  return insights
-}
+import { generateComprehensiveReport, saveReportWithDirectorAccess, generateDirectorAccessCode, type ReportInput } from "@/lib/agents/report-generation-agent"
 
 export async function POST(request: NextRequest) {
   try {
@@ -103,7 +12,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { intakeId, formData, userId } = await request.json()
+    const { intakeId, formData, userId, directorCode } = await request.json()
 
     // Verify user owns this intake
     const supabase = getServiceSupabaseClient()
@@ -126,52 +35,119 @@ export async function POST(request: NextRequest) {
       .eq('intake_id', intakeId)
       .order('created_at', { ascending: true })
 
-    // Generate AI report
-    const report = await generateAIReport(formData, chatHistory || [])
-
-    // Encrypt sensitive report data
-    const encryptedReport = encrypt(JSON.stringify(report))
-
-    // Create report summary (unencrypted) for searching
-    const reportSummary = {
-      service_type: report.service_preferences.type,
-      location: report.service_preferences.location,
-      budget_range: report.financial_situation.estimated_budget_range,
-      has_insurance: report.financial_situation.has_insurance,
-      urgency: report.family_situation.urgency_level,
-      attendee_count: report.service_preferences.expected_attendees,
-      cultural_requirements: report.service_preferences.cultural_requirements
-    }
-
-    // Save report to database
-    const { data: savedReport, error: reportError } = await supabase
-      .from('intake_reports')
-      .insert({
-        family_id: userId,
-        intake_id: intakeId,
-        report_data: encryptedReport,
-        report_summary: reportSummary,
-        status: 'pending_match'
-      })
-      .select()
+    // Get user profile for context
+    const { data: userProfile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
       .single()
 
-    if (reportError || !savedReport) {
-      console.error('Error saving report:', reportError)
-      return NextResponse.json({ error: "Failed to save report" }, { status: 500 })
+    console.log('🤖 Starting enhanced LangGraph report generation...')
+
+    // Prepare input for the LangGraph report agent
+    const reportInput: ReportInput = {
+      intakeData: formData,
+      chatHistory: chatHistory || [],
+      userProfile: userProfile || {}
     }
 
-    // TODO: Trigger matching system to find suitable directors
-    // This would analyze the report and match with director profiles
+    // Generate comprehensive AI report using LangGraph + Gemini
+    const reportAnalysis = await generateComprehensiveReport(reportInput)
+    
+    console.log('✅ LangGraph report analysis completed')
+
+    // Generate access code for director
+    const accessCode = directorCode || generateDirectorAccessCode()
+
+    // Save report with director access
+    const { reportId } = await saveReportWithDirectorAccess(
+      reportAnalysis,
+      intakeId,
+      userId,
+      accessCode
+    )
+
+    console.log(`📄 Report saved with ID: ${reportId}, Access Code: ${accessCode}`)
+
+    // TODO: Send notification to director with access code
+    // This would be implemented as:
+    // 1. Match family with suitable directors based on report analysis
+    // 2. Send secure notification with access code
+    // 3. Track director access and engagement
 
     return NextResponse.json({ 
       success: true, 
-      reportId: savedReport.id,
-      message: "Report generated successfully"
+      reportId: reportId,
+      accessCode: accessCode,
+      message: "Comprehensive report generated successfully",
+      analysis: {
+        summary: reportAnalysis.summary,
+        urgencyLevel: reportAnalysis.urgencyLevel,
+        preferredContact: reportAnalysis.preferredContact
+      }
     })
 
   } catch (error) {
-    console.error('Error generating intake report:', error)
+    console.error('❌ Error generating enhanced intake report:', error)
+    return NextResponse.json(
+      { error: "Internal server error", details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    )
+  }
+}
+
+// New endpoint to get director report access
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const accessCode = searchParams.get('code')
+
+    if (!accessCode) {
+      return NextResponse.json({ error: "Access code required" }, { status: 400 })
+    }
+
+    const supabase = getServiceSupabaseClient()
+
+    // Validate access code and get report
+    const { data: reportAccess, error: accessError } = await supabase
+      .from('report_access')
+      .select(`
+        *,
+        intake_reports(
+          id,
+          report_data,
+          created_at
+        )
+      `)
+      .eq('access_code', accessCode)
+      .gte('expires_at', new Date().toISOString())
+      .single()
+
+    if (accessError || !reportAccess) {
+      return NextResponse.json({ error: "Invalid or expired access code" }, { status: 404 })
+    }
+
+    // Log access for analytics
+    await supabase
+      .from('report_access')
+      .update({ 
+        last_accessed_at: new Date().toISOString(),
+        access_count: (reportAccess.access_count || 0) + 1
+      })
+      .eq('id', reportAccess.id)
+
+    return NextResponse.json({
+      success: true,
+      report: reportAccess.intake_reports,
+      accessInfo: {
+        accessType: reportAccess.access_type,
+        expiresAt: reportAccess.expires_at,
+        accessCount: (reportAccess.access_count || 0) + 1
+      }
+    })
+
+  } catch (error) {
+    console.error('Error accessing director report:', error)
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
