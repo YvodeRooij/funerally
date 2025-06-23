@@ -255,7 +255,7 @@ export function IntakeWizard() {
         if (response.ok) {
           const result = await response.json()
           console.log('✅ Demo report generated with LangGraph:', result)
-          router.push(`/family/dashboard`)
+          router.push(`/family`)
         } else {
           const error = await response.json()
           console.error('❌ Demo report failed:', error)
@@ -292,7 +292,7 @@ export function IntakeWizard() {
       if (response.ok) {
         const result = await response.json()
         console.log('✅ Production report generated with LangGraph:', result)
-        router.push(`/family/dashboard`)
+        router.push(`/family`)
       } else {
         const error = await response.json()
         console.error('❌ Production report failed:', error)

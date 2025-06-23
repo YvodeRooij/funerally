@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { DirectorDashboard } from "@/components/features/director/dashboard"
-import { FamilyDashboard } from "@/components/features/family/dashboard"
+import { FamilyDashboard } from "@/components/family/family-dashboard"
 import { VenueDashboard } from "@/components/features/venue/dashboard"
 import { Card, CardContent } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
@@ -76,7 +76,8 @@ export default function DashboardPage() {
   // Render appropriate dashboard based on user type
   switch (userType) {
     case "family":
-      return <FamilyDashboard />
+      router.push("/family")
+      return null
     case "director":
       return <DirectorDashboard />
     case "venue":

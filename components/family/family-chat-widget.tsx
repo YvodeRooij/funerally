@@ -11,7 +11,6 @@ import {
   Send,
   X,
   Phone,
-  Bot,
   User,
   Loader2,
   MessageCircle,
@@ -30,11 +29,23 @@ interface QuickAction {
   icon?: any
 }
 
-export function FamilyChatWidget({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+interface ChatWidgetProps {
+  isOpen: boolean
+  onClose: () => void
+  locale?: string
+  userType?: 'family' | 'director' | 'venue'
+}
+
+export function FamilyChatWidget({ 
+  isOpen, 
+  onClose, 
+  locale = 'nl',
+  userType = 'family' 
+}: ChatWidgetProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      content: "Hallo! Ik ben uw digitale assistent. Hoe kan ik u vandaag helpen?",
+      content: "Hallo! Hoe kan ik je helpen met het dashboard?",
       role: "assistant",
       timestamp: new Date(),
     },
@@ -74,32 +85,37 @@ export function FamilyChatWidget({ isOpen, onClose }: { isOpen: boolean; onClose
     setIsLoading(true)
 
     try {
-      // Call the existing AI chat API that uses LangGraph JS
-      const response = await fetch("/api/ai-chat", {
+      // Call the dashboard help API
+      const response = await fetch("/api/dashboard-help", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           message: message,
-          currentStep: 4, // Family dashboard context
-          stepName: "Dashboard Support",
-          formData: {
-            context: "family_dashboard_help",
+          context: {
             topic: selectedTopic,
+            currentPage: `${userType}_dashboard`,
+            userRole: userType,
           },
           chatHistory: messages.map((m) => ({
             role: m.role,
             content: m.content,
           })),
+          userType: userType,
+          locale: locale,
         }),
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
 
       const data = await response.json()
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.response || "Ik begrijp uw vraag. Laat me u helpen met de juiste informatie.",
+        content: data.response || "Ik begrijp je vraag. Laat me je helpen met de juiste informatie.",
         role: "assistant",
         timestamp: new Date(),
       }
@@ -142,8 +158,8 @@ export function FamilyChatWidget({ isOpen, onClose }: { isOpen: boolean; onClose
                 <MessageCircle className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="font-semibold text-white">Digitale Assistent</h3>
-                <p className="text-sm text-purple-100">Aangedreven door AI</p>
+                <h3 className="font-semibold text-white">Hulp & Ondersteuning</h3>
+                <p className="text-sm text-purple-100">We helpen je graag verder</p>
               </div>
             </div>
             <Button 
@@ -177,7 +193,7 @@ export function FamilyChatWidget({ isOpen, onClose }: { isOpen: boolean; onClose
                       </div>
                     ) : (
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-                        <Bot className="h-5 w-5 text-white" />
+                        <HelpCircle className="h-5 w-5 text-white" />
                       </div>
                     )}
                   </div>
@@ -207,7 +223,7 @@ export function FamilyChatWidget({ isOpen, onClose }: { isOpen: boolean; onClose
               <div className="flex justify-start">
                 <div className="flex gap-3 max-w-[80%]">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
-                    <Bot className="h-5 w-5 text-white" />
+                    <HelpCircle className="h-5 w-5 text-white" />
                   </div>
                   <div className="bg-gray-100 rounded-lg px-4 py-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -245,7 +261,7 @@ export function FamilyChatWidget({ isOpen, onClose }: { isOpen: boolean; onClose
               ref={textareaRef}
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
-              placeholder="Typ uw vraag hier..."
+              placeholder="Typ je vraag hier..."
               className="flex-1 min-h-[44px] max-h-32 resize-none"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {

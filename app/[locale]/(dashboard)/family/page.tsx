@@ -1,5 +1,10 @@
-import { FamilyDashboard } from "@/components/features/dashboard/family-dashboard"
+import { FamilyDashboard } from "@/components/family/family-dashboard"
 
-export default function FamilyDashboardPage() {
-  return <FamilyDashboard />
+interface PageProps {
+  params: Promise<{ locale: string }>
+}
+
+export default async function FamilyDashboardPage({ params }: PageProps) {
+  const { locale } = await params
+  return <FamilyDashboard locale={locale} />
 }

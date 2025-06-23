@@ -115,7 +115,11 @@ interface DashboardData {
   }>
 }
 
-export function FamilyDashboard() {
+interface FamilyDashboardProps {
+  locale?: string
+}
+
+export function FamilyDashboard({ locale = 'nl' }: FamilyDashboardProps) {
   const { data: session } = useSession()
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -993,7 +997,12 @@ export function FamilyDashboard() {
       </div>
 
       {/* Chat Widget */}
-      <FamilyChatWidget isOpen={showChatWidget} onClose={() => setShowChatWidget(false)} />
+      <FamilyChatWidget 
+        isOpen={showChatWidget} 
+        onClose={() => setShowChatWidget(false)}
+        locale={locale}
+        userType="family"
+      />
     </div>
   )
 }
