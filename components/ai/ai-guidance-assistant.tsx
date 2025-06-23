@@ -1,11 +1,23 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { X, Send, Minimize2, Maximize2, Bot, Heart, Lightbulb, HelpCircle, Mic, MicOff } from "lucide-react"
+import { supabase } from "@/lib/supabase"
+// Enhanced AI functionality with MCP tools and conversation saving
+// 💾 CONVERSATION PERSISTENCE: All chat messages are automatically saved to provide:
+//   - Personalized responses based on previous conversations
+//   - Context-aware assistance across sessions  
+//   - Data for generating comprehensive intake reports
+//   - Better user experience through learned preferences
+// 🔗 MCP INTEGRATION: AI agent uses Supabase MCP tools to access:
+//   - Real venue locations and pricing data
+//   - Available funeral service options
+//   - User's conversation history for personalization
+//   - Dynamic, data-driven responses instead of static templates
 
 interface Message {
   id: string
@@ -19,10 +31,12 @@ interface AIGuidanceAssistantProps {
   currentStep: number
   stepName: string
   formData: any
+  intakeId?: string | null
   onSuggestionApply?: (suggestion: any) => void
 }
 
-export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggestionApply }: AIGuidanceAssistantProps) {
+export function AIGuidanceAssistant({ currentStep, stepName, formData, intakeId }: Omit<AIGuidanceAssistantProps, 'onSuggestionApply'>) {
+  // Using the shared supabase client from lib/supabase.ts
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
@@ -30,6 +44,29 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
   const [isListening, setIsListening] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(true)
+  const [chatHistory, setChatHistory] = useState<any[]>([])
+
+  // Save message to database
+  const saveMessageToHistory = useCallback(async (message: Message) => {
+    if (!intakeId) return
+
+    try {
+      await supabase
+        .from('intake_chat_history')
+        .insert({
+          intake_id: intakeId,
+          message: message.content,
+          type: message.type,
+          context: {
+            step: currentStep,
+            stepName: stepName
+          },
+          created_at: message.timestamp.toISOString()
+        })
+    } catch (error) {
+      console.error('Error saving chat message:', error)
+    }
+  }, [intakeId, currentStep, stepName, supabase])
 
   // Context-aware suggestions based on current step
   const getContextualSuggestions = () => {
@@ -69,39 +106,65 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
     }
   }
 
-  // Simulate AI response with LangGraph JS
-  const simulateAIResponse = async (userMessage: string) => {
+  // Get AI response using API endpoint
+  const getAIResponse = async (userMessage: string) => {
     setIsTyping(true)
 
-    // Simulate API call to LangGraph JS
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      const response = await fetch('/api/ai-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          currentStep,
+          stepName,
+          formData,
+          intakeId,
+          chatHistory
+        })
+      })
 
-    let response = ""
+      const data = await response.json()
+      
+      const aiMessage: Message = {
+        id: Date.now().toString(),
+        type: "assistant",
+        content: data.response || "Sorry, ik kon geen antwoord genereren. Probeer het opnieuw.",
+        timestamp: new Date(),
+        context: stepName,
+      }
 
-    // Context-aware responses based on current step and user input
-    if (userMessage.toLowerCase().includes("overlijdensdatum")) {
-      response =
-        "Als u de exacte overlijdensdatum niet weet, kunt u de datum invullen die het dichtst bij de werkelijkheid ligt. Dit kan later altijd worden aangepast wanneer u de officiële documenten heeft. Het belangrijkste is dat we kunnen beginnen met de planning."
-    } else if (userMessage.toLowerCase().includes("begrafenis") || userMessage.toLowerCase().includes("crematie")) {
-      response =
-        "Een begrafenis betekent dat de overledene wordt begraven op een begraafplaats. Een crematie betekent dat het lichaam wordt gecremeerd en u de as kunt meenemen of laten bijzetten. Beide opties kunnen worden gecombineerd met een plechtigheid. Ik kan u helpen de beste keuze te maken op basis van uw wensen en tradities."
-    } else if (userMessage.toLowerCase().includes("kosten") || userMessage.toLowerCase().includes("prijs")) {
-      response =
-        "De kosten van een uitvaart variëren tussen €3.000 en €15.000, afhankelijk van uw keuzes. Een eenvoudige crematie kost gemiddeld €4.000-€6.000, een begrafenis €6.000-€10.000. Veel mensen hebben een uitvaartverzekering die een groot deel dekt. Ik kan u helpen uw verzekering te controleren."
-    } else {
-      response = `Ik begrijp uw vraag over "${userMessage}". Als AI-assistent gespecialiseerd in uitvaartplanning kan ik u helpen met alle aspecten van dit proces. Kunt u uw vraag iets specifieker stellen zodat ik u beter kan helpen?`
+      setMessages((prev) => [...prev, aiMessage])
+      // 💾 Note: Conversation is automatically saved by enhanced AI agent
+      // This enables personalized responses in future conversations
+      saveMessageToHistory(aiMessage)
+      
+      // Update chat history for context
+      setChatHistory(prev => [
+        ...prev,
+        { type: 'user', content: userMessage },
+        { type: 'assistant', content: data.response }
+      ])
+      
+    } catch (error) {
+      console.error('Error getting AI response:', error)
+      
+      // Fallback response
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        type: "assistant",
+        content: "Excuses, ik ondervind momenteel technische problemen. Kunt u uw vraag opnieuw stellen?",
+        timestamp: new Date(),
+        context: stepName,
+      }
+      
+      setMessages((prev) => [...prev, errorMessage])
+      saveMessageToHistory(errorMessage)
+    } finally {
+      setIsTyping(false)
     }
-
-    const aiMessage: Message = {
-      id: Date.now().toString(),
-      type: "assistant",
-      content: response,
-      timestamp: new Date(),
-      context: stepName,
-    }
-
-    setMessages((prev) => [...prev, aiMessage])
-    setIsTyping(false)
   }
 
   const handleSendMessage = async () => {
@@ -117,7 +180,7 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
     setMessages((prev) => [...prev, userMessage])
     setInputValue("")
 
-    await simulateAIResponse(inputValue)
+    await getAIResponse(inputValue)
   }
 
   const handleSuggestionClick = async (suggestion: string) => {
@@ -129,7 +192,7 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
     }
 
     setMessages((prev) => [...prev, userMessage])
-    await simulateAIResponse(suggestion)
+    await getAIResponse(suggestion)
     setShowSuggestions(false)
   }
 
@@ -162,7 +225,7 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
           <Bot className="h-6 w-6" />
         </Button>
         <div className="absolute -top-12 right-0 bg-slate-900 text-white px-3 py-1 rounded-lg text-sm whitespace-nowrap">
-          AI Hulp beschikbaar 🤖
+          Hulp nodig?
         </div>
       </div>
     )
@@ -183,7 +246,7 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
               <div className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
             </div>
             <div>
-              <h3 className="font-semibold text-slate-900">AI Uitvaart Assistent</h3>
+              {/* <h3 className="font-semibold text-slate-900">AI Uitvaart Assistent</h3> */}
               <p className="text-xs text-slate-600">Altijd hier om te helpen</p>
             </div>
           </div>
@@ -211,10 +274,16 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
                     {message.type === "assistant" && (
                       <div className="flex items-center gap-2 mb-2">
                         <Heart className="h-4 w-4 text-purple-600" />
-                        <span className="text-xs font-medium text-purple-600">AI Assistent</span>
+                        <span className="text-xs font-medium text-purple-600">Farewelly Assistent</span>
                       </div>
                     )}
-                    <p className="text-sm">{message.content}</p>
+                    <div className="text-sm whitespace-pre-wrap">
+                      {message.content.split('\n').map((line, i) => (
+                        <p key={i} className={line.startsWith('•') || line.startsWith('-') ? 'ml-2' : ''}>
+                          {line}
+                        </p>
+                      ))}
+                    </div>
                     <p className="text-xs opacity-70 mt-1">
                       {message.timestamp.toLocaleTimeString("nl-NL", {
                         hour: "2-digit",
@@ -240,7 +309,7 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
                           style={{ animationDelay: "0.2s" }}
                         ></div>
                       </div>
-                      <span className="text-xs text-slate-600">AI denkt na...</span>
+                      <span className="text-xs text-slate-600">Nadenken...</span>
                     </div>
                   </div>
                 </div>
@@ -277,7 +346,7 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Stel uw vraag..."
-                    onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+                    onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
                     className="pr-10"
                   />
                   <Button
@@ -297,7 +366,10 @@ export function AIGuidanceAssistant({ currentStep, stepName, formData, onSuggest
                 <Badge variant="secondary" className="text-xs">
                   Stap {currentStep + 1}: {stepName}
                 </Badge>
-                <span className="text-xs text-slate-500">Powered by LangGraph JS</span>
+                <div className="flex flex-col items-end text-xs text-slate-500">
+                  <span>Powered by LangGraph JS + MCP</span>
+                  <span className="text-[10px] opacity-75">💾 Gesprekken opgeslagen voor personalisatie</span>
+                </div>
               </div>
             </div>
           </>

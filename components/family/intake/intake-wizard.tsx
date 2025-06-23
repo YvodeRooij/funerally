@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,8 +11,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Progress } from "@/components/ui/progress"
-import { ArrowLeft, ArrowRight, Save, Heart } from "lucide-react"
+import { ArrowLeft, ArrowRight, Save, Heart, Check, Loader2 } from "lucide-react"
 import { AIGuidanceAssistant } from "@/components/ai/ai-guidance-assistant"
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { debounce } from "lodash"
 
 interface FormData {
   deceasedName: string
@@ -37,7 +41,15 @@ const steps = [
 ]
 
 export function IntakeWizard() {
+  const { data: session } = useSession()
+  const router = useRouter()
+  const supabase = createClientComponentClient()
+  
   const [currentStep, setCurrentStep] = useState(0)
+  const [intakeId, setIntakeId] = useState<string | null>(null)
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle")
+  const [lastSaved, setLastSaved] = useState<Date | null>(null)
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     deceasedName: "",
     dateOfDeath: "",
@@ -55,6 +67,89 @@ export function IntakeWizard() {
   })
 
   const progress = ((currentStep + 1) / steps.length) * 100
+
+  // Load existing intake on mount
+  useEffect(() => {
+    const loadExistingIntake = async () => {
+      if (!session?.user?.id) return
+
+      const { data: existingIntake } = await supabase
+        .from('family_intakes')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .eq('completed', false)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (existingIntake) {
+        setIntakeId(existingIntake.id)
+        setFormData(existingIntake.form_data)
+        setCurrentStep(existingIntake.current_step || 0)
+        setLastSaved(new Date(existingIntake.updated_at))
+      } else {
+        // Create new intake
+        const { data: newIntake } = await supabase
+          .from('family_intakes')
+          .insert({
+            user_id: session.user.id,
+            form_data: formData,
+            current_step: 0,
+            completed: false
+          })
+          .select()
+          .single()
+
+        if (newIntake) {
+          setIntakeId(newIntake.id)
+        }
+      }
+    }
+
+    loadExistingIntake()
+  }, [session])
+
+  // Auto-save function
+  const autoSave = useCallback(async () => {
+    if (!intakeId || !session?.user?.id) return
+
+    setSaveStatus("saving")
+
+    try {
+      const { error } = await supabase
+        .from('family_intakes')
+        .update({
+          form_data: formData,
+          current_step: currentStep,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', intakeId)
+
+      if (!error) {
+        setSaveStatus("saved")
+        setLastSaved(new Date())
+        setTimeout(() => setSaveStatus("idle"), 2000)
+      } else {
+        setSaveStatus("error")
+      }
+    } catch (error) {
+      console.error("Auto-save error:", error)
+      setSaveStatus("error")
+    }
+  }, [intakeId, formData, currentStep, session])
+
+  // Debounced auto-save
+  const debouncedAutoSave = useCallback(
+    debounce(autoSave, 2000),
+    [autoSave]
+  )
+
+  // Trigger auto-save on form changes
+  useEffect(() => {
+    if (intakeId) {
+      debouncedAutoSave()
+    }
+  }, [formData, currentStep, intakeId, debouncedAutoSave])
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -81,6 +176,54 @@ export function IntakeWizard() {
     }))
   }
 
+  const handleGenerateReport = async () => {
+    if (!intakeId || !session?.user?.id) return
+
+    setIsGeneratingReport(true)
+
+    try {
+      // First, ensure final save
+      await autoSave()
+
+      // Mark intake as completed
+      await supabase
+        .from('family_intakes')
+        .update({
+          completed: true,
+          completed_at: new Date().toISOString()
+        })
+        .eq('id', intakeId)
+
+      // Generate report via API
+      const response = await fetch('/api/generate-intake-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          intakeId,
+          formData,
+          userId: session.user.id
+        }),
+      })
+
+      if (response.ok) {
+        const { reportId } = await response.json()
+        
+        // Redirect to documents page with report ID
+        router.push(`/family/documents?reportId=${reportId}`)
+      } else {
+        console.error('Report generation failed')
+        setSaveStatus("error")
+      }
+    } catch (error) {
+      console.error('Error generating report:', error)
+      setSaveStatus("error")
+    } finally {
+      setIsGeneratingReport(false)
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
       {/* Progress Header */}
@@ -93,9 +236,36 @@ export function IntakeWizard() {
               </h2>
               <p className="text-slate-600">{steps[currentStep].description}</p>
             </div>
-            <div className="flex items-center gap-2 text-sm text-slate-500">
-              <Save className="h-4 w-4" />
-              Automatisch opgeslagen
+            <div className="flex items-center gap-2 text-sm">
+              {saveStatus === "saving" && (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                  <span className="text-blue-600">Opslaan...</span>
+                </>
+              )}
+              {saveStatus === "saved" && (
+                <>
+                  <Check className="h-4 w-4 text-green-600" />
+                  <span className="text-green-600">Opgeslagen</span>
+                </>
+              )}
+              {saveStatus === "idle" && lastSaved && (
+                <>
+                  <Save className="h-4 w-4 text-slate-500" />
+                  <span className="text-slate-500">
+                    Laatst opgeslagen {lastSaved.toLocaleTimeString("nl-NL", { 
+                      hour: "2-digit", 
+                      minute: "2-digit" 
+                    })}
+                  </span>
+                </>
+              )}
+              {saveStatus === "error" && (
+                <>
+                  <Save className="h-4 w-4 text-red-600" />
+                  <span className="text-red-600">Opslaan mislukt</span>
+                </>
+              )}
             </div>
           </div>
           <Progress value={progress} className="h-2" />
@@ -430,9 +600,22 @@ export function IntakeWizard() {
                 Na het rapport kunt u direct documenten uploaden zoals overlijdensakte en verzekeringspapieren.
               </p>
             </div>
-            <Button className="bg-purple-700 hover:bg-purple-800 flex items-center gap-2 w-full">
-              🔒 Veilig Rapport Genereren & Documenten Uploaden
-              <ArrowRight className="h-4 w-4" />
+            <Button 
+              onClick={handleGenerateReport}
+              disabled={isGeneratingReport}
+              className="bg-purple-700 hover:bg-purple-800 flex items-center gap-2 w-full"
+            >
+              {isGeneratingReport ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Rapport genereren...
+                </>
+              ) : (
+                <>
+                  🔒 Veilig Rapport Genereren & Documenten Uploaden
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </Button>
           </div>
         ) : (
@@ -454,7 +637,12 @@ export function IntakeWizard() {
       </Card>
 
       {/* AI Guidance Assistant */}
-      <AIGuidanceAssistant currentStep={currentStep} stepName={steps[currentStep].title} formData={formData} />
+      <AIGuidanceAssistant 
+        currentStep={currentStep} 
+        stepName={steps[currentStep].title} 
+        formData={formData}
+        intakeId={intakeId}
+      />
     </div>
   )
 }
