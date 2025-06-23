@@ -1,0 +1,13 @@
+{
+  "objective": "go on. And tell me where I can see the onboarding (so wich route cause I would excpect it to be family/onboarding or something. And I want to use the form we had before AND the ai guidance assitsnt we had (but this agent is powered using langgroah js with gemini flash-2.5 model",
+  "strategy": "auto",
+  "mode": "centralized",
+  "maxAgents": 5,
+  "timeout": 60,
+  "parallel": false,
+  "monitor": false,
+  "output": "json",
+  "outputDir": "./reports",
+  "timestamp": "2025-06-22T18:11:46.267Z",
+  "id": "swarm-auto-centralized-1750615906267"
+}

@@ -1,0 +1,157 @@
+{
+  "runtime": {
+    "version": "1.0.0",
+    "environment": "development",
+    "servers": {
+      "supabase": {
+        "enabled": true,
+        "autoStart": true,
+        "retryPolicy": {
+          "maxRetries": 3,
+          "retryDelay": 1000,
+          "backoffMultiplier": 2
+        },
+        "healthCheck": {
+          "enabled": true,
+          "interval": 30000,
+          "timeout": 5000
+        }
+      },
+      "filesystem": {
+        "enabled": true,
+        "autoStart": true,
+        "security": {
+          "enforceAllowedDirectories": true,
+          "preventDirectoryTraversal": true,
+          "maxFileSize": 52428800
+        }
+      },
+      "memory": {
+        "enabled": true,
+        "autoStart": true,
+        "persistence": {
+          "enabled": true,
+          "backupInterval": 3600000,
+          "maxBackups": 5
+        },
+        "limits": {
+          "maxKeys": 10000,
+          "maxValueSize": 1048576,
+          "totalSize": 104857600
+        }
+      },
+      "puppeteer": {
+        "enabled": true,
+        "autoStart": false,
+        "browser": {
+          "args": [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage"
+          ],
+          "defaultViewport": {
+            "width": 1920,
+            "height": 1080
+          }
+        }
+      },
+      "fetch": {
+        "enabled": true,
+        "autoStart": true,
+        "security": {
+          "enforceAllowedHosts": true,
+          "rejectPrivateIPs": true
+        },
+        "limits": {
+          "maxConcurrent": 10,
+          "requestTimeout": 30000,
+          "maxResponseSize": 10485760
+        }
+      }
+    },
+    "global": {
+      "processManager": {
+        "maxProcesses": 10,
+        "killTimeout": 5000,
+        "restartOnCrash": true
+      },
+      "monitoring": {
+        "enabled": true,
+        "metricsInterval": 60000,
+        "alertThresholds": {
+          "memoryUsage": 0.8,
+          "cpuUsage": 0.9,
+          "errorRate": 0.05
+        }
+      },
+      "security": {
+        "enableSandbox": true,
+        "restrictNetworkAccess": false,
+        "auditLogging": true
+      }
+    }
+  },
+  "integrations": {
+    "supabase": {
+      "features": {
+        "database": true,
+        "auth": true,
+        "storage": true,
+        "realtime": true,
+        "functions": false
+      },
+      "pooling": {
+        "min": 2,
+        "max": 10,
+        "idleTimeout": 30000
+      },
+      "retry": {
+        "maxAttempts": 3,
+        "initialDelay": 100,
+        "maxDelay": 5000
+      }
+    },
+    "langgraph": {
+      "enabled": true,
+      "agentTypes": [
+        "researcher",
+        "coder",
+        "analyst",
+        "tester",
+        "architect"
+      ],
+      "coordination": {
+        "mode": "centralized",
+        "maxConcurrentAgents": 5,
+        "taskQueue": {
+          "maxSize": 100,
+          "priorityLevels": 3
+        }
+      }
+    }
+  },
+  "deployment": {
+    "environments": {
+      "development": {
+        "debug": true,
+        "verboseLogging": true,
+        "hotReload": true
+      },
+      "staging": {
+        "debug": false,
+        "verboseLogging": false,
+        "hotReload": false
+      },
+      "production": {
+        "debug": false,
+        "verboseLogging": false,
+        "hotReload": false,
+        "security": {
+          "enforceHTTPS": true,
+          "enableRateLimiting": true,
+          "enableWAF": true
+        }
+      }
+    }
+  }
+}

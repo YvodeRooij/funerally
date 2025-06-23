@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-06-22T08:14:30.563Z",
+  "timestamp": "2025-06-23T07:25:40.116Z",
   "version": "1.0",
   "entries": [
     {
@@ -641,58 +641,198 @@
       "checksum": "dc41335e35b6326369fe9bf7687302be028bf927951ee485e33026973a54a090",
       "references": [],
       "dependencies": []
+    },
+    {
+      "id": "entry_mc7e7xlg_h288647y1",
+      "key": "swarm-auto-centralized-1750579912356/routing/solution",
+      "value": "{\"problem\":\"App was returning 404s for /en, /en/for-families, /en/how-it-works despite having next-intl configured\",\"root_cause\":\"The app directory structure was not set up for internationalization. Pages were directly under /app instead of /app/[locale]/\",\"solution\":{\"steps_taken\":[\"1. Created /app/[locale] directory for dynamic locale routing\",\"2. Created a proper locale-aware layout at /app/[locale]/layout.tsx with NextIntlClientProvider\",\"3. Moved all pages from /app to /app/[locale]/ to enable locale-prefixed routing\",\"4. Updated root layout to be minimal, only wrapping with Providers\",\"5. Created redirect page at /app/page.tsx to redirect / to default locale (/nl)\"],\"key_changes\":{\"app_structure\":\"Changed from /app/page.tsx to /app/[locale]/page.tsx pattern\",\"layout_hierarchy\":\"Root layout -> Providers -> [locale] layout -> NextIntlClientProvider -> Navigation/Footer\",\"routing_pattern\":\"All routes now support locale prefixes: /en, /en/for-families, /en/how-it-works\",\"middleware_config\":\"Already configured correctly with next-intl middleware\"},\"result\":\"All locale-prefixed routes (/en/*, /nl/*, /ar/*, /tr/*) now work correctly\"},\"implementation_details\":{\"locale_layout_features\":[\"Validates locale parameter against configured locales\",\"Loads messages for the current locale\",\"Sets correct HTML lang and dir attributes for RTL support\",\"Wraps content with NextIntlClientProvider\"],\"supported_locales\":[\"nl\",\"en\",\"ar\",\"tr\"],\"default_locale\":\"nl\",\"middleware_behavior\":\"localePrefix: as-needed means / redirects to /nl, but /en is explicitly shown\"}}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-22T08:15:46.132Z",
+      "updatedAt": "2025-06-22T08:15:46.132Z",
+      "lastAccessedAt": "2025-06-22T08:15:46.132Z",
+      "version": 1,
+      "size": 1676,
+      "compressed": true,
+      "checksum": "fb8c0bf464669667463eb18f35f8415ec95c6ea993be5b0897e5a7cbaea95ad6",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mc7e8w7v_wcz5hguum",
+      "key": "swarm-auto-centralized-1750579912356/middleware/fixes",
+      "value": "{\"solution\":{\"problemAnalysis\":{\"rootCause\":\"App directory structure does not support locale-based routing required by next-intl\",\"issues\":[\"No [locale] directory in app folder to handle dynamic locale routing\",\"Root layout.tsx is hardcoded with lang=nl instead of accepting dynamic locale\",\"Routes are directly in app/ instead of app/[locale]/\",\"Middleware expects routes like /en/dashboard but app structure only has /dashboard\"]},\"requiredChanges\":{\"directoryRestructure\":{\"description\":\"Move all non-API routes into app/[locale]/ directory\",\"steps\":[\"Create app/[locale]/ directory\",\"Move all page routes (except api/) into app/[locale]/\",\"Keep api/ routes in app/api/ (they dont need locale prefix)\",\"Update all internal links to use locale-aware navigation\"]},\"layoutChanges\":{\"currentLayout\":\"app/layout.tsx\",\"newLayout\":\"app/[locale]/layout.tsx\",\"requiredModifications\":[\"Accept locale parameter in layout props\",\"Use locale parameter for html lang attribute\",\"Import next-intl providers and wrap content\",\"Pass locale to i18n configuration\"]},\"middlewareOptimization\":{\"currentIssue\":\"localePrefix: as-needed might cause inconsistent routing\",\"recommendation\":\"Change to localePrefix: always for consistent /locale/path routing\",\"benefits\":\"Ensures all routes have locale prefix, avoiding 404 errors\"}},\"implementationSteps\":{\"step1\":\"Create app/[locale]/ directory structure\",\"step2\":\"Move all non-API routes into [locale] folder\",\"step3\":\"Update middleware.ts to use localePrefix: always\",\"step4\":\"Create new [locale]/layout.tsx with locale support\",\"step5\":\"Update root layout.tsx to be minimal\",\"step6\":\"Create navigation helper for locale-aware links\"}},\"codeExamples\":{\"localeLayout\":\"step3_locale_layout.tsx\",\"updatedMiddleware\":\"step4_middleware.ts\",\"minimalRootLayout\":\"step5_rootlayout.tsx\",\"navigationHelper\":\"navigation_helper.ts\"},\"summary\":\"Complete i18n middleware fix. Main issue: app directory needs [locale] folder structure for next-intl routing to work properly.\",\"timestamp\":\"2025-06-22T08:16:10.042Z\"}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-22T08:16:31.003Z",
+      "updatedAt": "2025-06-22T08:16:31.003Z",
+      "lastAccessedAt": "2025-06-22T08:16:31.003Z",
+      "version": 1,
+      "size": 2184,
+      "compressed": true,
+      "checksum": "c0e02e40d95272f5395c1756c8e82e429589b6e9b32b88115212416d7682c052",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mc8rs95s_sm5gdmuag",
+      "key": "swarm-auto-centralized-1750663294713/env-analyzer/findings",
+      "value": "{\"analysis_timestamp\":\"2025-06-23T07:23:15Z\",\"env_file_status\":{\"exists\":true,\"location\":\"/workspaces/funerally/.env\",\"supabase_credentials\":{\"NEXT_PUBLIC_SUPABASE_URL\":\"present\",\"NEXT_PUBLIC_SUPABASE_ANON_KEY\":\"present\",\"SUPABASE_SERVICE_ROLE_KEY\":\"present\",\"SUPABASE_ACCESS_TOKEN\":\"present\",\"DATABASE_URL\":\"present\"}},\"mcp_config_status\":{\"exists\":true,\"location\":\"/workspaces/funerally/.mcp.json\",\"configuration\":{\"server_type\":\"supabase\",\"command\":\"npx\",\"package\":\"@supabase/mcp-server-supabase@latest\",\"project_ref\":\"present\",\"access_token\":\"present\"}},\"missing_configurations\":{\"langgraph\":{\"LANGGRAPH_API_KEY\":\"placeholder_only\",\"LANGGRAPH_DEPLOYMENT_ID\":\"placeholder_only\",\"LANGSMITH_API_KEY\":\"placeholder_only\"},\"oauth\":{\"GOOGLE_CLIENT_ID\":\"placeholder_only\",\"GOOGLE_CLIENT_SECRET\":\"placeholder_only\",\"FACEBOOK_CLIENT_ID\":\"placeholder_only\",\"FACEBOOK_CLIENT_SECRET\":\"placeholder_only\"},\"openai\":{\"OPENAI_API_KEY\":\"placeholder_only\"}},\"recommendations\":[\"All Supabase credentials are properly configured\",\"MCP server for Supabase is correctly configured\",\"LangGraph.js credentials need to be replaced with actual values\",\"OAuth credentials (Google, Facebook) need to be configured if required\",\"OpenAI API key needs to be set if AI features are needed\"]}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-23T07:23:15.424Z",
+      "updatedAt": "2025-06-23T07:23:15.424Z",
+      "lastAccessedAt": "2025-06-23T07:23:15.424Z",
+      "version": 1,
+      "size": 1408,
+      "compressed": true,
+      "checksum": "db3d65662779925a49158d1c05bdd96340e64a06bd7fc7ead0df9e8c80e48268",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mc8rt8ym_x610szvb6",
+      "key": "swarm-auto-centralized-1750663294713/doc-researcher/mcp-setup",
+      "value": "\"# MCP-Supabase Integration Documentation\\n\\n## Overview\\nThe Model Context Protocol (MCP) server provides a tool integration layer between Claude and external services like Supabase. Based on my research, the project already has a basic MCP configuration set up for Supabase integration.\\n\\n## Current MCP Configuration\\nThe project has an .mcp.json file configured with:\\n- Server: @supabase/mcp-server-supabase@latest\\n- Project Reference: kbneptalijjgtimulfsi\\n- Access Token: sbp_c7bcad9decdfdff29906ca40a47c51cd25e1191b\\n\\n## MCP Server Purpose\\n- Facilitates tool integration within Claude-Flow platform\\n- Part of the multi-layer agent system architecture\\n- Enables Claude to interact directly with Supabase services\\n\\n## Integration with Existing Setup\\nThe project already has:\\n1. Supabase authentication configured with NextAuth\\n2. Database schema with user profiles, roles, and permissions\\n3. OAuth setup documentation for Google and LinkedIn\\n4. Scripts for Supabase initialization\\n\\n## Key Files and Components\\n1. **.mcp.json** - MCP server configuration\\n2. **lib/supabase.ts** - Supabase client initialization\\n3. **lib/auth-supabase.ts** - NextAuth with Supabase adapter\\n4. **supabase/schema.sql** - Database schema\\n5. **scripts/setup-supabase.js** - Automated setup script\\n\\n## MCP Commands (from Claude-Flow)\\n- `./claude-flow mcp start [--port 3000] [--host localhost]` - Start MCP server\\n- `./claude-flow mcp status` - Show MCP server status\\n- `./claude-flow mcp tools` - List available MCP tools\\n\\n## Required Environment Variables\\n- NEXT_PUBLIC_SUPABASE_URL\\n- NEXT_PUBLIC_SUPABASE_ANON_KEY\\n- SUPABASE_SERVICE_ROLE_KEY or SUPABASE_ACCESS_TOKEN\\n- NEXTAUTH_URL\\n- NEXTAUTH_SECRET\\n\\n## Authentication Flow\\n1. MCP server connects to Supabase using project reference and access token\\n2. NextAuth handles user authentication through Supabase\\n3. User profiles are automatically created in Supabase database\\n4. Role-based permissions are enforced through RLS policies\"",
+      "type": "string",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-23T07:24:01.822Z",
+      "updatedAt": "2025-06-23T07:24:01.822Z",
+      "lastAccessedAt": "2025-06-23T07:24:01.822Z",
+      "version": 1,
+      "size": 2082,
+      "compressed": true,
+      "checksum": "58ca4403f78adf93ee70f6b7f55e884e8da870ac73a91a7e95c825f14900e527",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mc8ruakh_7046zoagb",
+      "key": "swarm-auto-centralized-1750663294713/doc-researcher/mcp-setup-checklist",
+      "value": "MCP-Supabase Integration Setup Checklist created at /workspaces/funerally/MCP_SUPABASE_SETUP_CHECKLIST.md - Contains comprehensive steps for: prerequisites, environment config, MCP server setup, database setup, authentication, OAuth providers, testing, security verification, and monitoring. Key requirements include: proper .mcp.json configuration, Supabase credentials, database schema execution, and MCP server commands verification.",
+      "type": "string",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-23T07:24:50.561Z",
+      "updatedAt": "2025-06-23T07:24:50.561Z",
+      "lastAccessedAt": "2025-06-23T07:24:50.561Z",
+      "version": 1,
+      "size": 467,
+      "compressed": false,
+      "checksum": "f0693edf18511029a36addd5b043587c85277e494840902e40f3bb766c14286d",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mc8rumnd_p8f59j7cx",
+      "key": "swarm-auto-centralized-1750663294713/tester/results",
+      "value": "{\"timestamp\":\"2025-06-23T07:23:34.353Z\",\"environment\":{\"supabaseUrl\":\"https://kbneptalijjgtimulfsi.supabase.co\",\"projectRef\":\"kbneptalijjgtimulfsi\",\"nodeVersion\":\"v22.16.0\",\"platform\":\"linux\"},\"tests\":[{\"name\":\"Environment: NEXT_PUBLIC_SUPABASE_URL\",\"status\":\"pass\",\"message\":\"Variable is set\",\"timestamp\":\"2025-06-23T07:23:34.353Z\",\"length\":40},{\"name\":\"Environment: NEXT_PUBLIC_SUPABASE_ANON_KEY\",\"status\":\"pass\",\"message\":\"Variable is set\",\"timestamp\":\"2025-06-23T07:23:34.353Z\",\"length\":208},{\"name\":\"Environment: SUPABASE_SERVICE_ROLE_KEY\",\"status\":\"pass\",\"message\":\"Variable is set\",\"timestamp\":\"2025-06-23T07:23:34.354Z\",\"length\":219},{\"name\":\"Environment: SUPABASE_ACCESS_TOKEN\",\"status\":\"pass\",\"message\":\"Variable is set\",\"timestamp\":\"2025-06-23T07:23:34.354Z\",\"length\":44},{\"name\":\"MCP Config: Structure\",\"status\":\"pass\",\"message\":\"Valid MCP configuration found\",\"timestamp\":\"2025-06-23T07:23:34.354Z\"},{\"name\":\"MCP Config: Command\",\"status\":\"pass\",\"message\":\"Using npx command\",\"timestamp\":\"2025-06-23T07:23:34.354Z\"},{\"name\":\"MCP Config: Package\",\"status\":\"pass\",\"message\":\"Correct Supabase MCP package specified\",\"timestamp\":\"2025-06-23T07:23:34.354Z\"},{\"name\":\"MCP Config: Project Reference\",\"status\":\"pass\",\"message\":\"Project ref: ${SUPABASE_PROJECT_REF}\",\"timestamp\":\"2025-06-23T07:23:34.354Z\"},{\"name\":\"MCP Config: Access Token\",\"status\":\"pass\",\"message\":\"Access token is configured\",\"timestamp\":\"2025-06-23T07:23:34.354Z\"},{\"name\":\"Supabase: Anon Client\",\"status\":\"warning\",\"message\":\"Anonymous client has limited access\",\"timestamp\":\"2025-06-23T07:23:34.716Z\",\"error\":\"relation \\\"public._prisma_migrations\\\" does not exist\"},{\"name\":\"Supabase: Service Client\",\"status\":\"fail\",\"message\":\"Service role client connection failed\",\"timestamp\":\"2025-06-23T07:23:34.735Z\",\"error\":\"Invalid API key\"},{\"name\":\"Database: Table \\\"users\\\"\",\"status\":\"warning\",\"message\":\"Table does not exist or is not accessible\",\"timestamp\":\"2025-06-23T07:23:34.773Z\",\"error\":\"Invalid API key\"},{\"name\":\"Database: Table \\\"profiles\\\"\",\"status\":\"warning\",\"message\":\"Table does not exist or is not accessible\",\"timestamp\":\"2025-06-23T07:23:34.795Z\",\"error\":\"Invalid API key\"},{\"name\":\"Database: Table \\\"sessions\\\"\",\"status\":\"warning\",\"message\":\"Table does not exist or is not accessible\",\"timestamp\":\"2025-06-23T07:23:34.811Z\",\"error\":\"Invalid API key\"},{\"name\":\"MCP Server: Spawn\",\"status\":\"pass\",\"message\":\"MCP server can be spawned successfully\",\"timestamp\":\"2025-06-23T07:23:38.380Z\",\"output\":\"0.4.5\\n\"},{\"name\":\"Auth: Session Check\",\"status\":\"pass\",\"message\":\"No active session (expected)\",\"timestamp\":\"2025-06-23T07:23:38.385Z\"},{\"name\":\"Auth: Health Check\",\"status\":\"pass\",\"message\":\"Auth service is responsive\",\"timestamp\":\"2025-06-23T07:23:38.386Z\"}],\"summary\":{\"total\":17,\"passed\":12,\"failed\":1,\"warnings\":4}}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-23T07:25:06.217Z",
+      "updatedAt": "2025-06-23T07:25:06.217Z",
+      "lastAccessedAt": "2025-06-23T07:25:06.217Z",
+      "version": 1,
+      "size": 3192,
+      "compressed": true,
+      "checksum": "d71e6e1d8523d0e8052c9caf833d116aff18dcafd151a4ded4686ea348757b24",
+      "references": [],
+      "dependencies": []
+    },
+    {
+      "id": "entry_mc8rvcsw_s7vt5zf4f",
+      "key": "swarm-auto-centralized-1750663294713/config-architect/specs",
+      "value": "{\"mcp_configuration\":{\"version\":\"1.0.0\",\"created\":\"2025-06-23\",\"architect\":\"Configuration Architect\",\"overview\":\"Comprehensive MCP-Supabase integration configuration for Funerally platform\",\"servers\":{\"supabase\":{\"package\":\"@supabase/mcp-server-supabase@latest\",\"purpose\":\"Database operations, authentication, real-time subscriptions\",\"env_vars\":[\"SUPABASE_PROJECT_REF\",\"SUPABASE_ACCESS_TOKEN\"],\"integration_points\":[\"lib/supabase.ts\",\"lib/auth-supabase.ts\",\"API routes for server-side operations\"]},\"filesystem\":{\"package\":\"@modelcontextprotocol/server-filesystem\",\"purpose\":\"Secure file system operations\",\"env_vars\":[\"MCP_ALLOWED_DIRECTORIES\"],\"security\":\"Restricted to whitelisted directories only\"},\"memory\":{\"package\":\"@modelcontextprotocol/server-memory\",\"purpose\":\"Persistent data storage across sessions\",\"env_vars\":[\"MCP_MEMORY_STORE_PATH\"],\"features\":[\"Key-value storage\",\"Session persistence\",\"Cross-agent sharing\"]},\"puppeteer\":{\"package\":\"@modelcontextprotocol/server-puppeteer\",\"purpose\":\"Browser automation and web scraping\",\"env_vars\":[\"MCP_PUPPETEER_HEADLESS\"],\"use_cases\":[\"Screenshot generation\",\"PDF creation\",\"Web automation\"]},\"fetch\":{\"package\":\"@modelcontextprotocol/server-fetch\",\"purpose\":\"HTTP requests and API interactions\",\"env_vars\":[\"MCP_FETCH_USER_AGENT\",\"MCP_FETCH_TIMEOUT\"],\"security\":\"Host whitelisting enabled\"}},\"environment_variables\":{\"supabase\":{\"NEXT_PUBLIC_SUPABASE_URL\":\"Public Supabase project URL\",\"NEXT_PUBLIC_SUPABASE_ANON_KEY\":\"Public anonymous key for client-side\",\"SUPABASE_SERVICE_ROLE_KEY\":\"Service role key for server-side admin operations\",\"SUPABASE_PROJECT_REF\":\"Project reference ID\",\"SUPABASE_ACCESS_TOKEN\":\"Personal access token for MCP server\"},\"mcp_core\":{\"MCP_ALLOWED_DIRECTORIES\":\"Comma-separated list of allowed directories\",\"MCP_MEMORY_STORE_PATH\":\"Path for persistent memory storage\",\"MCP_LOG_LEVEL\":\"Logging level (debug < /dev/null | info|warn|error)\",\"MCP_ALLOWED_HOSTS\":\"Comma-separated list of allowed hosts for fetch\",\"MCP_MAX_REQUEST_SIZE\":\"Maximum request size in bytes\"}},\"files_created\":[{\"path\":\".mcp.json\",\"purpose\":\"Main MCP server configuration\",\"status\":\"Updated with environment variable references\"},{\"path\":\".mcp/config.json\",\"purpose\":\"Runtime configuration for MCP servers\",\"features\":[\"Health checks\",\"Retry policies\",\"Resource limits\"]},{\"path\":\"MCP_CONFIGURATION.md\",\"purpose\":\"Comprehensive documentation\",\"sections\":[\"Setup guide\",\"Security considerations\",\"Troubleshooting\"]}],\"security_measures\":[\"All credentials stored as environment variables\",\"Directory access restricted via whitelist\",\"Host access controlled for fetch operations\",\"Service role key isolated to server-side only\",\"Request size limits enforced\",\"Audit logging enabled\"],\"integration_architecture\":{\"client_side\":{\"supabase_client\":\"Uses anon key for public operations\",\"realtime\":\"WebSocket connections for live updates\",\"auth\":\"OAuth and credentials through Supabase Auth\"},\"server_side\":{\"service_client\":\"Uses service role key for admin operations\",\"mcp_servers\":\"Invoke MCP servers for enhanced capabilities\",\"api_routes\":\"Next.js API routes integrate with MCP\"}},\"deployment_checklist\":[\"Set all environment variables in production\",\"Create .mcp/memory directory with proper permissions\",\"Run database schema in Supabase\",\"Configure OAuth providers in Supabase dashboard\",\"Generate and secure access tokens\",\"Test all MCP server connections\",\"Enable monitoring and alerts\"]}}",
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-23T07:25:40.112Z",
+      "updatedAt": "2025-06-23T07:25:40.112Z",
+      "lastAccessedAt": "2025-06-23T07:25:40.112Z",
+      "version": 1,
+      "size": 3752,
+      "compressed": true,
+      "checksum": "8d79184579d935107f7d8e2c1eda4f04b850a26f5a505a7f22f6c12692fa9fe9",
+      "references": [],
+      "dependencies": []
     }
   ],
   "statistics": {
     "overview": {
-      "totalEntries": 20,
-      "totalSize": 92233,
-      "compressedEntries": 15,
-      "compressionRatio": -17.72054735941843,
-      "indexSize": 1000,
-      "memoryUsage": 10705208,
+      "totalEntries": 27,
+      "totalSize": 106994,
+      "compressedEntries": 21,
+      "compressionRatio": -18.799766718506998,
+      "indexSize": 1350,
+      "memoryUsage": 11315544,
       "diskUsage": 0
     },
     "distribution": {
       "byNamespace": {
         "default": {
-          "count": 20,
-          "size": 92233
+          "count": 27,
+          "size": 106994
         }
       },
       "byType": {
         "string": {
-          "count": 9,
-          "size": 50000
+          "count": 11,
+          "size": 52549
         },
         "object": {
-          "count": 11,
-          "size": 42233
+          "count": 16,
+          "size": 54445
         }
       },
       "byOwner": {
         "system": {
-          "count": 20,
-          "size": 92233
+          "count": 27,
+          "size": 106994
         }
       },
       "byAccessLevel": {
         "shared": {
-          "count": 20,
-          "size": 92233
+          "count": 27,
+          "size": 106994
         }
       }
     },
     "temporal": {
-      "entriesCreatedLast24h": 20,
-      "entriesUpdatedLast24h": 20,
-      "entriesAccessedLast24h": 20,
+      "entriesCreatedLast24h": 8,
+      "entriesUpdatedLast24h": 8,
+      "entriesAccessedLast24h": 8,
       "oldestEntry": "2025-06-21T08:32:32.683Z",
-      "newestEntry": "2025-06-22T08:14:30.536Z"
+      "newestEntry": "2025-06-23T07:25:40.112Z"
     },
     "performance": {
       "averageQueryTime": 0,
-      "averageWriteTime": 4,
+      "averageWriteTime": 0,
       "cacheHitRatio": 0,
       "indexEfficiency": 0.95
     },
