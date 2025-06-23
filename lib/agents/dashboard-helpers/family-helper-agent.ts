@@ -9,6 +9,29 @@ export class FamilyDashboardHelper extends BaseDashboardHelper {
     }
     super(config)
   }
+  
+  // Override getResponse for debugging
+  async getResponse(
+    message: string,
+    context: any = {},
+    chatHistory: Array<{ role: string; content: string }> = []
+  ): Promise<string> {
+    // Check for specific questions and return quick help
+    const lowerMessage = message.toLowerCase()
+    
+    if (lowerMessage.includes('verzend') || lowerMessage.includes('ondernemer')) {
+      return this.getQuickHelp('verzenden')
+    }
+    if (lowerMessage.includes('document')) {
+      return this.getQuickHelp('documenten')
+    }
+    if (lowerMessage.includes('wijzig') || lowerMessage.includes('aanpas')) {
+      return this.getQuickHelp('wijzigen')
+    }
+    
+    // Fallback to parent implementation
+    return super.getResponse(message, context, chatHistory)
+  }
 
   getDefaultQuickHelp(): string {
     // Language-aware default response

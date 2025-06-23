@@ -31,13 +31,21 @@ export abstract class BaseDashboardHelper {
     
     // Get localized prompts
     this.prompts = getAgentPrompts(config.userType, this.locale)
+    console.log(`Loading prompts for ${config.userType} in ${this.locale}:`, {
+      hasSystemPrompt: !!this.prompts?.systemPrompt,
+      hasFallback: !!this.prompts?.fallbackResponse,
+      fallbackValue: this.prompts?.fallbackResponse
+    })
     
     // Get country-specific config
     this.countryConfig = COUNTRY_CONFIGS[this.locale] || COUNTRY_CONFIGS['nl']
     
+    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY || "AIzaSyB1JpL7VY56A5td_P5Y692AzB2q5TIRTWw"
+    console.log('Initializing model with API key:', apiKey ? 'Present' : 'Missing')
+    
     this.model = new ChatGoogleGenerativeAI({
       model: config.modelName || "gemini-2.0-flash-exp",
-      apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY || "AIzaSyB1JpL7VY56A5td_P5Y692AzB2q5TIRTWw",
+      apiKey: apiKey,
       temperature: config.temperature || 0.3,
     })
   }
@@ -103,7 +111,9 @@ export abstract class BaseDashboardHelper {
       messages.push(new HumanMessage(contextMessage))
 
       // Get response from model
+      console.log('Invoking model with messages:', messages.length)
       const response = await this.model.invoke(messages)
+      console.log('Model response received')
       
       return response.content.toString()
     } catch (error) {
