@@ -108,6 +108,8 @@ export abstract class BaseDashboardHelper {
       return response.content.toString()
     } catch (error) {
       console.error(`Error in ${this.config.userType} helper agent:`, error)
+      console.error('Locale:', this.locale)
+      console.error('Fallback response:', this.prompts.fallbackResponse)
       return this.getFallbackResponse()
     }
   }
