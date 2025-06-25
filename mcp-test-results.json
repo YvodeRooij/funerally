@@ -1,0 +1,89 @@
+{
+  "timestamp": "2025-06-23T07:30:29.165Z",
+  "environment": "development",
+  "servers": {
+    "supabase": {
+      "name": "Supabase MCP Server",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "Environment Variables",
+          "status": "passed",
+          "details": {
+            "projectRef": "kbneptalijjgtimulfsi",
+            "url": "https://kbneptalijjgtimulfsi.supabase.co",
+            "authType": "service_role"
+          }
+        },
+        {
+          "name": "Database Connection",
+          "status": "passed",
+          "details": {
+            "connected": true,
+            "tables": []
+          }
+        },
+        {
+          "name": "MCP Server Process",
+          "status": "passed",
+          "details": {
+            "available": true
+          }
+        }
+      ]
+    },
+    "filesystem": {
+      "name": "Filesystem MCP Server",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "Allowed Directories",
+          "status": "passed",
+          "details": {
+            "accessible": [
+              "./app",
+              "./components",
+              "./lib",
+              "./scripts",
+              "./supabase"
+            ]
+          }
+        },
+        {
+          "name": "MCP Server Process",
+          "status": "passed",
+          "details": {
+            "available": true
+          }
+        }
+      ]
+    },
+    "memory": {
+      "name": "Memory MCP Server",
+      "status": "passed",
+      "tests": [
+        {
+          "name": "Memory Storage Path",
+          "status": "passed",
+          "details": {
+            "path": "./memory",
+            "accessible": true
+          }
+        },
+        {
+          "name": "MCP Server Process",
+          "status": "passed",
+          "details": {
+            "available": true
+          }
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 3,
+    "passed": 3,
+    "failed": 0,
+    "warnings": 0
+  }
+}

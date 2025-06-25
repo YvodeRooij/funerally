@@ -1,4 +1,4 @@
-import { IntakeWizard } from "@/components/intake/intake-wizard"
+import { IntakeWizard } from "@/components/family/intake/intake-wizard"
 
 export default function StartPage() {
   return (

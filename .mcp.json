@@ -1,0 +1,60 @@
+{
+  "servers": {
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest"],
+      "env": {
+        "SUPABASE_PROJECT_REF": "kbneptalijjgtimulfsi",
+        "SUPABASE_ACCESS_TOKEN": "sbp_c7bcad9decdfdff29906ca40a47c51cd25e1191b"
+      },
+      "description": "Supabase MCP server for database operations, authentication, and real-time subscriptions"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "env": {
+        "ALLOWED_DIRECTORIES": "${MCP_ALLOWED_DIRECTORIES}"
+      },
+      "description": "Filesystem MCP server for file operations within allowed directories"
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {
+        "MEMORY_STORE_PATH": "${MCP_MEMORY_STORE_PATH}"
+      },
+      "description": "Memory MCP server for persistent data storage across sessions"
+    }
+  },
+  "mcpServers": {
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"],
+      "env": {
+        "PUPPETEER_HEADLESS": "${MCP_PUPPETEER_HEADLESS:-true}"
+      },
+      "description": "Puppeteer MCP server for browser automation and web scraping"
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "env": {
+        "FETCH_USER_AGENT": "${MCP_FETCH_USER_AGENT}",
+        "FETCH_TIMEOUT": "${MCP_FETCH_TIMEOUT:-30000}"
+      },
+      "description": "Fetch MCP server for HTTP requests and API interactions"
+    }
+  },
+  "configuration": {
+    "version": "1.0.0",
+    "environment": "${NODE_ENV:-development}",
+    "logging": {
+      "level": "${MCP_LOG_LEVEL:-info}",
+      "format": "${MCP_LOG_FORMAT:-json}"
+    },
+    "security": {
+      "allowedHosts": "${MCP_ALLOWED_HOSTS}",
+      "maxRequestSize": "${MCP_MAX_REQUEST_SIZE:-10485760}"
+    }
+  }
+}

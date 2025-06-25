@@ -1,0 +1,129 @@
+{
+  "timestamp": "2025-06-23T07:23:34.353Z",
+  "environment": {
+    "supabaseUrl": "https://kbneptalijjgtimulfsi.supabase.co",
+    "projectRef": "kbneptalijjgtimulfsi",
+    "nodeVersion": "v22.16.0",
+    "platform": "linux"
+  },
+  "tests": [
+    {
+      "name": "Environment: NEXT_PUBLIC_SUPABASE_URL",
+      "status": "pass",
+      "message": "Variable is set",
+      "timestamp": "2025-06-23T07:23:34.353Z",
+      "length": 40
+    },
+    {
+      "name": "Environment: NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "status": "pass",
+      "message": "Variable is set",
+      "timestamp": "2025-06-23T07:23:34.353Z",
+      "length": 208
+    },
+    {
+      "name": "Environment: SUPABASE_SERVICE_ROLE_KEY",
+      "status": "pass",
+      "message": "Variable is set",
+      "timestamp": "2025-06-23T07:23:34.354Z",
+      "length": 219
+    },
+    {
+      "name": "Environment: SUPABASE_ACCESS_TOKEN",
+      "status": "pass",
+      "message": "Variable is set",
+      "timestamp": "2025-06-23T07:23:34.354Z",
+      "length": 44
+    },
+    {
+      "name": "MCP Config: Structure",
+      "status": "pass",
+      "message": "Valid MCP configuration found",
+      "timestamp": "2025-06-23T07:23:34.354Z"
+    },
+    {
+      "name": "MCP Config: Command",
+      "status": "pass",
+      "message": "Using npx command",
+      "timestamp": "2025-06-23T07:23:34.354Z"
+    },
+    {
+      "name": "MCP Config: Package",
+      "status": "pass",
+      "message": "Correct Supabase MCP package specified",
+      "timestamp": "2025-06-23T07:23:34.354Z"
+    },
+    {
+      "name": "MCP Config: Project Reference",
+      "status": "pass",
+      "message": "Project ref: ${SUPABASE_PROJECT_REF}",
+      "timestamp": "2025-06-23T07:23:34.354Z"
+    },
+    {
+      "name": "MCP Config: Access Token",
+      "status": "pass",
+      "message": "Access token is configured",
+      "timestamp": "2025-06-23T07:23:34.354Z"
+    },
+    {
+      "name": "Supabase: Anon Client",
+      "status": "warning",
+      "message": "Anonymous client has limited access",
+      "timestamp": "2025-06-23T07:23:34.716Z",
+      "error": "relation \"public._prisma_migrations\" does not exist"
+    },
+    {
+      "name": "Supabase: Service Client",
+      "status": "fail",
+      "message": "Service role client connection failed",
+      "timestamp": "2025-06-23T07:23:34.735Z",
+      "error": "Invalid API key"
+    },
+    {
+      "name": "Database: Table \"users\"",
+      "status": "warning",
+      "message": "Table does not exist or is not accessible",
+      "timestamp": "2025-06-23T07:23:34.773Z",
+      "error": "Invalid API key"
+    },
+    {
+      "name": "Database: Table \"profiles\"",
+      "status": "warning",
+      "message": "Table does not exist or is not accessible",
+      "timestamp": "2025-06-23T07:23:34.795Z",
+      "error": "Invalid API key"
+    },
+    {
+      "name": "Database: Table \"sessions\"",
+      "status": "warning",
+      "message": "Table does not exist or is not accessible",
+      "timestamp": "2025-06-23T07:23:34.811Z",
+      "error": "Invalid API key"
+    },
+    {
+      "name": "MCP Server: Spawn",
+      "status": "pass",
+      "message": "MCP server can be spawned successfully",
+      "timestamp": "2025-06-23T07:23:38.380Z",
+      "output": "0.4.5\n"
+    },
+    {
+      "name": "Auth: Session Check",
+      "status": "pass",
+      "message": "No active session (expected)",
+      "timestamp": "2025-06-23T07:23:38.385Z"
+    },
+    {
+      "name": "Auth: Health Check",
+      "status": "pass",
+      "message": "Auth service is responsive",
+      "timestamp": "2025-06-23T07:23:38.386Z"
+    }
+  ],
+  "summary": {
+    "total": 17,
+    "passed": 12,
+    "failed": 1,
+    "warnings": 4
+  }
+}
