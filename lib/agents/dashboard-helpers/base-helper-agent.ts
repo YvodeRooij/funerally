@@ -35,7 +35,7 @@ export abstract class BaseDashboardHelper {
     // Get country-specific config
     this.countryConfig = COUNTRY_CONFIGS[this.locale] || COUNTRY_CONFIGS['nl']
     
-    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY || "AIzaSyB1JpL7VY56A5td_P5Y692AzB2q5TIRTWw"
+    const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY ,
     
     this.model = new ChatGoogleGenerativeAI({
       model: config.modelName || "gemini-2.0-flash-exp",

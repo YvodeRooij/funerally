@@ -19,7 +19,7 @@ type FuneralPlanningState = typeof FuneralPlanningAnnotation.State
 // Initialize Gemini model
 const model = new ChatGoogleGenerativeAI({
   model: "gemini-2.0-flash-exp",
-  apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY || "AIzaSyB1JpL7VY56A5td_P5Y692AzB2q5TIRTWw",
+  apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY,
   temperature: 0.3,
   streaming: true,
 })
