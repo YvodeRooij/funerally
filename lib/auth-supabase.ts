@@ -28,8 +28,8 @@ export const authOptions: NextAuthOptions = {
   
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "REDACTED_CLIENT_ID",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "REDACTED_CLIENT_SECRET",
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
           prompt: "consent",
@@ -40,8 +40,8 @@ export const authOptions: NextAuthOptions = {
       }
     }),
     LinkedInProvider({
-      clientId: process.env.LINKEDIN_CLIENT_ID || "placeholder-linkedin-id",
-      clientSecret: process.env.LINKEDIN_CLIENT_SECRET || "placeholder-linkedin-secret",
+      clientId: process.env.LINKEDIN_CLIENT_ID!,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
       authorization: {
         params: {
           scope: "openid profile email"
@@ -122,7 +122,8 @@ export const authOptions: NextAuthOptions = {
       // Initial sign in
       if (account && user) {
         token.userType = user.userType || null
-        token.role = user.role || user.userType || null
+        const role = user.role || user.userType
+        token.role = role === null ? undefined : role
         token.isNewUser = !user.userType && !user.role
         token.userId = user.id
         token.permissions = user.permissions || (user.role ? ROLE_PERMISSIONS[user.role as UserRole] : [])
@@ -139,7 +140,7 @@ export const authOptions: NextAuthOptions = {
       }
 
       // For OAuth providers (Google, LinkedIn), fetch profile from Supabase
-      if (token.provider && ["google", "linkedin"].includes(token.provider) && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      if (token.provider && ["google", "linkedin"].includes(token.provider as string) && process.env.SUPABASE_SERVICE_ROLE_KEY) {
         const supabase = getServiceSupabaseClient()
         const { data: profile } = await supabase
           .from('profiles')
