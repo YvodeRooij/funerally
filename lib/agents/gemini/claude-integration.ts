@@ -17,7 +17,7 @@ export interface ClaudeGeminiTask {
 /**
  * Main integration function that Claude Code can call via Task tool
  */
-export async function useGeminiSparringPartner(task: ClaudeGeminiTask): Promise<string> {
+export async function executeGeminiTask(task: ClaudeGeminiTask): Promise<string> {
   try {
     switch (task.type) {
       case 'brainstorm':
@@ -65,7 +65,7 @@ export const GeminiSparring = {
    * Brainstorm ideas with Gemini
    */
   async brainstorm(topic: string, options?: { perspectives?: string[], depth?: 'shallow' | 'deep' }) {
-    return useGeminiSparringPartner({
+    return executeGeminiTask({
       type: 'brainstorm',
       description: topic,
       params: options
@@ -76,7 +76,7 @@ export const GeminiSparring = {
    * Get code review from Gemini
    */
   async reviewCode(code: string, language: string = 'typescript') {
-    return useGeminiSparringPartner({
+    return executeGeminiTask({
       type: 'review_code',
       description: 'Code review request',
       params: { code, language }
@@ -87,7 +87,7 @@ export const GeminiSparring = {
    * Get debugging assistance from Gemini
    */
   async debugHelp(error: string, context: string) {
-    return useGeminiSparringPartner({
+    return executeGeminiTask({
       type: 'debug',
       description: error,
       params: { error, context }
@@ -98,7 +98,7 @@ export const GeminiSparring = {
    * General consultation with Gemini
    */
   async consult(query: string) {
-    return useGeminiSparringPartner({
+    return executeGeminiTask({
       type: 'consult',
       description: query
     })
@@ -106,7 +106,9 @@ export const GeminiSparring = {
 }
 
 // Export for use in claude-flow integration
-export default {
-  useGeminiSparringPartner,
+const geminiIntegration = {
+  executeGeminiTask,
   GeminiSparring
 }
+
+export default geminiIntegration

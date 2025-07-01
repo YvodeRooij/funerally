@@ -7,7 +7,7 @@
 
 export { GeminiSparringPartner, geminiSparringPartner } from './sparring-partner'
 export { GeminiBatchTool, geminiBatchTool } from './batch-tool-wrapper'
-export { useGeminiSparringPartner, GeminiSparring } from './claude-integration'
+export { executeGeminiTask, GeminiSparring } from './claude-integration'
 
 // Re-export types
 export type { 

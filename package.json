@@ -59,7 +59,12 @@
     "setup:supabase": "node scripts/setup-supabase.js",
     "setup:oauth": "node scripts/configure-oauth.js",
     "setup:intake": "node scripts/run-intake-migration.js",
-    "setup:all": "npm run mcp:init && npm run setup:supabase && npm run setup:oauth && npm run setup:intake"
+    "setup:all": "npm run mcp:init && npm run setup:supabase && npm run setup:oauth && npm run setup:intake",
+    "gemini:brainstorm": "node scripts/gemini-sparring.js brainstorm",
+    "gemini:review": "node scripts/gemini-sparring.js review",
+    "gemini:debug": "node scripts/gemini-sparring.js debug",
+    "gemini:chat": "node scripts/gemini-sparring.js chat",
+    "gemini:test": "node scripts/test-gemini-integration.js"
   },
   "dependencies": {
     "@auth/core": "latest",

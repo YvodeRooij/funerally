@@ -9,7 +9,6 @@ const execAsync = promisify(exec)
 export interface GeminiSparringConfig {
   apiKey?: string
   model?: string
-  maxTokens?: number
   temperature?: number
 }
 
@@ -29,8 +28,7 @@ export class GeminiSparringPartner {
   constructor(config: GeminiSparringConfig = {}) {
     this.config = {
       apiKey: config.apiKey || process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY,
-      model: config.model || 'gemini-pro',
-      maxTokens: config.maxTokens || 8192,
+      model: config.model || 'gemini-2.5-flash',
       temperature: config.temperature || 0.7
     }
   }
@@ -65,19 +63,24 @@ export class GeminiSparringPartner {
       
       fullPrompt += `User: ${prompt}\nAssistant:`
 
-      // Create a temporary file for the prompt
+      // Create a temporary file for the prompt to handle complex inputs
       const tempFile = join('/tmp', `gemini-prompt-${randomUUID()}.txt`)
       await writeFile(tempFile, fullPrompt)
 
-      // Execute gemini CLI command
-      const command = `GEMINI_API_KEY="${this.config.apiKey}" gemini "${prompt}" --model ${this.config.model} --max-tokens ${this.config.maxTokens} --temperature ${this.config.temperature}`
+      // Execute gemini CLI command with proper syntax
+      const env = {
+        ...process.env,
+        GEMINI_API_KEY: this.config.apiKey
+      }
+
+      const command = `cat "${tempFile}" | gemini --prompt "${prompt.replace(/"/g, '\\"')}" --model ${this.config.model}`
       
-      const { stdout, stderr } = await execAsync(command)
+      const { stdout, stderr } = await execAsync(command, { env })
       
       // Clean up temp file
       await unlink(tempFile).catch(() => {})
 
-      if (stderr) {
+      if (stderr && !stderr.includes('warning')) {
         console.error('Gemini CLI stderr:', stderr)
       }
 

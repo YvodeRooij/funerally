@@ -217,6 +217,38 @@ Task("Frontend Team", "Develop UI using Memory architecture specs");
 Task("Backend Team", "Implement APIs according to Memory specifications");
 ```
 
+### Gemini CLI Sparring Partner Integration
+Use Gemini CLI as a sparring partner for development tasks:
+
+```javascript
+// Brainstorming
+Task("Gemini Brainstorm", "Use Gemini to brainstorm authentication improvements");
+
+// Code Review
+Task("Gemini Review", "Review lib/auth.ts with Gemini for security issues");
+
+// Debugging
+Task("Gemini Debug", "Help debug TypeError in payment processing");
+
+// Architecture Consultation
+Task("Gemini Consult", "Consult on microservices vs monolith architecture");
+```
+
+**Gemini Integration Commands:**
+- `node scripts/gemini-sparring.js brainstorm "<topic>"`: Brainstorm ideas
+- `node scripts/gemini-sparring.js review <file>`: Review code file
+- `node scripts/gemini-sparring.js debug "<error>" "<context>"`: Debug assistance
+- `node scripts/gemini-sparring.js chat "<question>"`: General consultation
+
+**Using with Claude-Flow:**
+```bash
+# Development with Gemini consultation
+./claude-flow sparc run coder "Implement auth with Gemini review"
+
+# Architecture planning with Gemini
+./claude-flow sparc run architect "Design system with Gemini brainstorming"
+```
+
 ## Code Style Preferences
 - Use ES modules (import/export) syntax
 - Destructure imports when possible
@@ -225,6 +257,14 @@ Task("Backend Team", "Implement APIs according to Memory specifications");
 - Add JSDoc comments for public APIs
 - Use async/await instead of Promise chains
 - Prefer const/let over var
+
+## Best Practices Lookup
+**IMPORTANT**: Always use context7 MCP to look up best practices when coding:
+- Before implementing new features, consult context7 for language-specific best practices
+- When reviewing code patterns, verify against current best practices
+- For security implementations, check context7 for latest security guidelines
+- For performance optimizations, reference context7 optimization patterns
+- When choosing between implementation approaches, consult context7 for recommendations
 
 ## Workflow Guidelines
 - Always run typecheck after making code changes
@@ -242,5 +282,7 @@ Task("Backend Team", "Implement APIs according to Memory specifications");
 - **All swarm operations include automatic batch tool coordination**
 - **Monitor progress** with TodoRead during long-running operations
 - **Enable parallel execution** with --parallel flags for maximum efficiency
+- **Use Gemini CLI as sparring partner** via Task tool for brainstorming, code review, and debugging assistance
+- **Always consult context7 MCP** for best practices before implementing new features or patterns
 
 This configuration ensures optimal use of Claude Code's batch tools for swarm orchestration and parallel task execution with full Claude-Flow capabilities.

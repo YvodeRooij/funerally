@@ -5,7 +5,7 @@ import { getServiceSupabaseClient } from "@/lib/supabase"
 // Enhanced report generation agent using LangGraph JS + Gemini
 const model = new ChatGoogleGenerativeAI({
   model: "gemini-2.0-flash-exp",
-  apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY || ,
+  apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY,
   temperature: 0.2, // Lower temperature for more consistent reports
 })
 
