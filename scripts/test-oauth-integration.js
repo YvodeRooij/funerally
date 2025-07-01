@@ -212,9 +212,9 @@ async function testFrontendIntegration() {
   log('\n🔍 Test 5: Frontend Integration', 'bright');
   
   const filesToCheck = [
-    { path: '/workspaces/funerally/app/[locale]/(auth)/signin/page.tsx', name: 'Sign In Page' },
-    { path: '/workspaces/funerally/lib/auth-supabase.ts', name: 'Auth Configuration' },
-    { path: '/workspaces/funerally/components/features/auth/signup-form.tsx', name: 'Sign Up Form' }
+    { path: '/workspaces/farewelly/app/[locale]/(auth)/signin/page.tsx', name: 'Sign In Page' },
+    { path: '/workspaces/farewelly/lib/auth-supabase.ts', name: 'Auth Configuration' },
+    { path: '/workspaces/farewelly/components/features/auth/signup-form.tsx', name: 'Sign Up Form' }
   ];
   
   for (const file of filesToCheck) {
@@ -253,7 +253,7 @@ async function testNextAuthConfig() {
   
   try {
     const fs = require('fs');
-    const authConfigPath = '/workspaces/funerally/lib/auth-supabase.ts';
+    const authConfigPath = '/workspaces/farewelly/lib/auth-supabase.ts';
     
     if (fs.existsSync(authConfigPath)) {
       const content = fs.readFileSync(authConfigPath, 'utf8');
@@ -360,11 +360,11 @@ function generateTestReport() {
   
   // Save results
   const fs = require('fs');
-  const reportPath = '/workspaces/funerally/test-results/oauth-integration-test.json';
+  const reportPath = '/workspaces/farewelly/test-results/oauth-integration-test.json';
   
   try {
-    if (!fs.existsSync('/workspaces/funerally/test-results')) {
-      fs.mkdirSync('/workspaces/funerally/test-results', { recursive: true });
+    if (!fs.existsSync('/workspaces/farewelly/test-results')) {
+      fs.mkdirSync('/workspaces/farewelly/test-results', { recursive: true });
     }
     
     fs.writeFileSync(reportPath, JSON.stringify(testResults, null, 2));

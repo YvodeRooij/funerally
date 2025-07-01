@@ -1,4 +1,4 @@
-// EXACT TRANSFORMATION FOR: /workspaces/funerally/app/[locale]/layout.tsx
+// EXACT TRANSFORMATION FOR: /workspaces/farewelly/app/[locale]/layout.tsx
 // This is the precise before/after transformation needed
 
 // BEFORE (Current failing code):

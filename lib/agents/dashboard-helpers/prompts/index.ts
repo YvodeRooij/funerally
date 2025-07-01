@@ -69,7 +69,7 @@ export interface CountryConfig {
 export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
   nl: {
     emergencyNumber: '0800-1234567',
-    supportEmail: 'support@funerally.nl',
+    supportEmail: 'support@farewelly.nl',
     supportHours: '24/7',
     currency: '€',
     dateFormat: 'DD-MM-YYYY',
@@ -83,7 +83,7 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
   },
   en: {
     emergencyNumber: '0800-FUNERAL',
-    supportEmail: 'support@funerally.com',
+    supportEmail: 'support@farewelly.com',
     supportHours: '24/7',
     currency: '£',
     dateFormat: 'MM/DD/YYYY',
@@ -98,7 +98,7 @@ export const COUNTRY_CONFIGS: Record<string, CountryConfig> = {
   // Easy to add more countries
   tr: {
     emergencyNumber: '0800-CENAZE',
-    supportEmail: 'destek@funerally.tr',
+    supportEmail: 'destek@farewelly.tr',
     supportHours: '24/7',
     currency: '₺',
     dateFormat: 'DD.MM.YYYY',

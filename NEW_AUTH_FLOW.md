@@ -90,7 +90,7 @@ type AuthStep = "returning" | "usertype" | "authmethod" | "loading"
 ### **LocalStorage Strategy:**
 ```javascript
 // Returning user preference (30 dagen)
-funerally_user_preference: {
+farewelly_user_preference: {
   name: "Demo Familie",
   userType: "family", 
   lastSeen: timestamp,

@@ -10,9 +10,9 @@ OAuth has been successfully configured for the Supabase project with placeholder
 - **Email Auth**: ✅ Enabled
 
 ### Files Created
-- `/workspaces/funerally/scripts/configure-oauth-automated.js` - Automated configuration script
-- `/workspaces/funerally/.env.oauth-template` - Environment variables template
-- `/workspaces/funerally/OAUTH_UPDATE_INSTRUCTIONS.md` - Detailed update instructions
+- `/workspaces/farewelly/scripts/configure-oauth-automated.js` - Automated configuration script
+- `/workspaces/farewelly/.env.oauth-template` - Environment variables template
+- `/workspaces/farewelly/OAUTH_UPDATE_INSTRUCTIONS.md` - Detailed update instructions
 
 ### Memory Storage
 All configuration commands have been stored in Memory with key:

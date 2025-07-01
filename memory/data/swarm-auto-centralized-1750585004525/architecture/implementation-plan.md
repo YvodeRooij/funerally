@@ -4,7 +4,7 @@
 **Duration: 5 minutes**
 
 ### Files to Fix:
-- `/workspaces/funerally/app/[locale]/layout.tsx` (IMMEDIATE)
+- `/workspaces/farewelly/app/[locale]/layout.tsx` (IMMEDIATE)
 
 ### Actions:
 1. Apply exact transformation from `exact-transformation.tsx`

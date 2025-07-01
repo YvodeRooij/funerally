@@ -38,7 +38,7 @@ export default async function Layout({
 
 ## Immediate Action Required
 
-### CRITICAL FIX - File: `/workspaces/funerally/app/[locale]/layout.tsx`
+### CRITICAL FIX - File: `/workspaces/farewelly/app/[locale]/layout.tsx`
 
 **Current Code (Lines 17-23):**
 ```tsx
@@ -122,7 +122,7 @@ export default async function Component({
 ## Implementation Sequence (Dependency-Safe Order)
 
 ### Phase 1: Root Layout (CRITICAL - 5 minutes)
-- ✅ Fix `/workspaces/funerally/app/[locale]/layout.tsx`
+- ✅ Fix `/workspaces/farewelly/app/[locale]/layout.tsx`
 - ✅ Test with `npm run build`
 
 ### Phase 2: Identify All Affected Files (10 minutes)
@@ -222,7 +222,7 @@ npm run test
 ## Files Created in Memory
 
 All templates and patterns are stored in:
-- `/workspaces/funerally/memory/data/swarm-auto-centralized-1750585004525/architecture/`
+- `/workspaces/farewelly/memory/data/swarm-auto-centralized-1750585004525/architecture/`
 
 ### Key Files:
 - `fix-patterns.json` - Complete transformation patterns
@@ -252,6 +252,6 @@ All templates and patterns are stored in:
 
 ## Ready for Implementation
 
-The solution architecture is complete and ready for swarm execution. The critical path starts with fixing `/workspaces/funerally/app/[locale]/layout.tsx` using the exact transformation provided.
+The solution architecture is complete and ready for swarm execution. The critical path starts with fixing `/workspaces/farewelly/app/[locale]/layout.tsx` using the exact transformation provided.
 
 **Next Step**: Execute Phase 1 by applying the exact transformation to the layout.tsx file.

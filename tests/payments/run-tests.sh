@@ -10,7 +10,7 @@ echo "=========================================="
 
 # Test configuration
 TEST_ENV="test"
-TEST_DIR="/workspaces/funerally/tests/payments"
+TEST_DIR="/workspaces/farewelly/tests/payments"
 LOG_DIR="$TEST_DIR/logs"
 MEMORY_KEY="swarm-testing-1750494292308/payments/tests"
 

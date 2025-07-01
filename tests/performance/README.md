@@ -93,7 +93,7 @@ The tests are calibrated for the Dutch funeral services market:
 
 #### Run All Tests
 ```bash
-cd /workspaces/funerally/tests/performance
+cd /workspaces/farewelly/tests/performance
 ./run-all-tests.sh
 ```
 

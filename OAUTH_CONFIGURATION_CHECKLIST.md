@@ -27,7 +27,7 @@ Development: http://localhost:3000/auth/callback
 - [ ] Go to https://console.cloud.google.com/
 - [ ] Sign in with your Google account
 - [ ] Create new project or select existing one
-- [ ] Project name: `Funerally Production` (suggested)
+- [ ] Project name: `farewelly Production` (suggested)
 
 ### Step 2: Enable Required APIs
 - [ ] Navigate to "APIs & Services" > "Library"
@@ -39,14 +39,14 @@ Development: http://localhost:3000/auth/callback
 - [ ] Click "Create Credentials" > "OAuth 2.0 Client ID"
 - [ ] Configure OAuth consent screen first if prompted:
   - [ ] User Type: External
-  - [ ] App name: `Funerally`
+  - [ ] App name: `farewelly`
   - [ ] User support email: Your email
   - [ ] Developer contact email: Your email
   - [ ] Add your domain to "Authorized domains"
 
 ### Step 4: Configure OAuth Client
 - [ ] Application type: "Web application"
-- [ ] Name: `Funerally Supabase Auth`
+- [ ] Name: `farewelly Supabase Auth`
 - [ ] Authorized JavaScript origins:
   - [ ] Add `https://kbneptalijjgtimulfsi.supabase.co`
   - [ ] Add `http://localhost:3000` (for development)
@@ -68,7 +68,7 @@ Development: http://localhost:3000/auth/callback
 - [ ] Click "Create app"
 
 ### Step 2: Create LinkedIn App
-- [ ] App name: `Funerally`
+- [ ] App name: `farewelly`
 - [ ] LinkedIn Page: Select your company page (or create one)
 - [ ] Privacy policy URL: Your privacy policy URL
 - [ ] App logo: Upload logo (300x300px recommended)

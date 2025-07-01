@@ -341,7 +341,7 @@ export function DirectorReportAccess() {
             </div>
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              <span>Veilig bekeken via Funerally platform</span>
+              <span>Veilig bekeken via farewelly platform</span>
             </div>
           </div>
         </Card>

@@ -185,8 +185,8 @@ The test runner generates:
 
 ### Report Location
 ```
-/workspaces/funerally/tests/realtime/test-report.json
-/workspaces/funerally/tests/realtime/test-summary.md
+/workspaces/farewelly/tests/realtime/test-report.json
+/workspaces/farewelly/tests/realtime/test-summary.md
 Memory Key: swarm-testing-1750494292308/realtime/tests
 ```
 

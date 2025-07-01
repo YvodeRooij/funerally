@@ -30,7 +30,7 @@ ANSWER STYLE:
     statistieken: "View your dashboard for occupancy rate, revenue and popular services. Export data for your own analysis.",
   },
 
-  fallbackResponse: "System temporarily unavailable. For venue support: 020-9876543 or venues@funerally.com",
+  fallbackResponse: "System temporarily unavailable. For venue support: 020-9876543 or venues@farewelly.com",
 }
 
 export default venuePromptsEN

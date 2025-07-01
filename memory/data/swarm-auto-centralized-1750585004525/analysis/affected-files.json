@@ -4,7 +4,7 @@
   "issue": "params must be awaited in server components due to async nature in Next.js 15",
   "affected_files": [
     {
-      "file_path": "/workspaces/funerally/app/[locale]/layout.tsx",
+      "file_path": "/workspaces/farewelly/app/[locale]/layout.tsx",
       "type": "layout",
       "priority": "CRITICAL",
       "line_numbers": [19, 22],
@@ -16,7 +16,7 @@
       "complexity": "medium"
     },
     {
-      "file_path": "/workspaces/funerally/app/[locale]/features/venues/[id]/page.tsx",
+      "file_path": "/workspaces/farewelly/app/[locale]/features/venues/[id]/page.tsx",
       "type": "page",
       "priority": "HIGH",
       "line_numbers": [9, 12],
@@ -28,7 +28,7 @@
       "complexity": "low"
     },
     {
-      "file_path": "/workspaces/funerally/app/[locale]/features/venues/[id]/book/page.tsx",
+      "file_path": "/workspaces/farewelly/app/[locale]/features/venues/[id]/book/page.tsx",
       "type": "page",
       "priority": "HIGH",
       "line_numbers": [9, 12],
@@ -40,7 +40,7 @@
       "complexity": "low"
     },
     {
-      "file_path": "/workspaces/funerally/app/[locale]/(shared)/venues/[id]/page.tsx",
+      "file_path": "/workspaces/farewelly/app/[locale]/(shared)/venues/[id]/page.tsx",
       "type": "page",
       "priority": "HIGH",
       "line_numbers": [9, 10],
@@ -53,7 +53,7 @@
       "note": "Client component - may need different approach"
     },
     {
-      "file_path": "/workspaces/funerally/app/[locale]/(shared)/venues/[id]/book/page.tsx",
+      "file_path": "/workspaces/farewelly/app/[locale]/(shared)/venues/[id]/book/page.tsx",
       "type": "page",
       "priority": "MEDIUM",
       "line_numbers": [9, 12],
@@ -65,7 +65,7 @@
       "complexity": "low"
     },
     {
-      "file_path": "/workspaces/funerally/app/[locale]/(provider)/clients/[id]/page.tsx",
+      "file_path": "/workspaces/farewelly/app/[locale]/(provider)/clients/[id]/page.tsx",
       "type": "page",
       "priority": "MEDIUM",
       "line_numbers": [9, 10],
@@ -78,7 +78,7 @@
       "note": "Client component - may need different approach"
     },
     {
-      "file_path": "/workspaces/funerally/app/[locale]/(dashboard)/director/clients/[id]/page.tsx",
+      "file_path": "/workspaces/farewelly/app/[locale]/(dashboard)/director/clients/[id]/page.tsx",
       "type": "page",
       "priority": "MEDIUM",
       "line_numbers": [9, 10],
@@ -92,7 +92,7 @@
   ],
   "client_components_using_useParams": [
     {
-      "file_path": "/workspaces/funerally/app/[locale]/director/venues/[id]/page.tsx",
+      "file_path": "/workspaces/farewelly/app/[locale]/director/venues/[id]/page.tsx",
       "type": "page",
       "priority": "NONE",
       "line_numbers": [27, 28],
@@ -104,7 +104,7 @@
       "complexity": "none"
     },
     {
-      "file_path": "/workspaces/funerally/app/[locale]/director/venues/[id]/book/page.tsx",
+      "file_path": "/workspaces/farewelly/app/[locale]/director/venues/[id]/book/page.tsx",
       "type": "page",
       "priority": "NONE",
       "line_numbers": [16, 17],

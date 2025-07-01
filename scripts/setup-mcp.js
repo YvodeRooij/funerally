@@ -2,7 +2,7 @@
 
 /**
  * MCP-Supabase Configuration Setup Script
- * This script helps configure the MCP servers for the Funerally platform
+ * This script helps configure the MCP servers for the farewelly platform
  */
 
 const fs = require('fs');
@@ -117,8 +117,8 @@ async function updateEnvFile(config) {
   
   // Add MCP configuration if not present
   const mcpConfig = {
-    MCP_ALLOWED_DIRECTORIES: '/workspaces/funerally,/tmp',
-    MCP_MEMORY_STORE_PATH: '/workspaces/funerally/.mcp/memory',
+    MCP_ALLOWED_DIRECTORIES: '/workspaces/farewelly,/tmp',
+    MCP_MEMORY_STORE_PATH: '/workspaces/farewelly/.mcp/memory',
     MCP_PUPPETEER_HEADLESS: 'true',
     MCP_FETCH_USER_AGENT: 'MCP-Fetch/1.0',
     MCP_FETCH_TIMEOUT: '30000',

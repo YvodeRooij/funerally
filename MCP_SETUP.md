@@ -1,6 +1,6 @@
 # MCP (Model Context Protocol) Server Setup Guide
 
-This guide provides comprehensive instructions for setting up and configuring MCP servers for the Funerally platform with Supabase integration.
+This guide provides comprehensive instructions for setting up and configuring MCP servers for the farewelly platform with Supabase integration.
 
 ## 📋 Overview
 

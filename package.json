@@ -38,7 +38,7 @@
     "test:langgraph:coverage": "vitest --coverage tests/langgraph",
     "test:config": "jest tests/config",
     "test:security": "jest tests/security",
-    "build:docker": "docker build -t funerally-app .",
+    "build:docker": "docker build -t farewelly-app .",
     "docker:dev": "docker-compose -f docker-compose.yml up -d",
     "docker:prod": "docker-compose -f docker-compose.prod.yml up -d",
     "db:migrate": "node scripts/migrate.js",
