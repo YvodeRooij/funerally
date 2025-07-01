@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Progress } from "@/components/ui/progress"
-import { Heart, ArrowRight, Loader2 } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Heart, ArrowRight, Loader2, CheckCircle, AlertCircle } from "lucide-react"
 
 export function FamilyOnboarding() {
   const router = useRouter()
@@ -23,13 +24,57 @@ export function FamilyOnboarding() {
     address: "",
     zipCode: "",
     city: "",
-    notes: ""
+    notes: "",
+    hasDirectorCode: false,
+    directorCode: ""
   })
+  const [directorCodeValidation, setDirectorCodeValidation] = useState<{
+    status: 'idle' | 'validating' | 'valid' | 'invalid'
+    message?: string
+  }>({ status: 'idle' })
 
   const totalSteps = 2
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+    
+    // Auto-validate director code when it changes
+    if (field === 'directorCode' && typeof value === 'string') {
+      if (value.length >= 3) {
+        const timeoutId = setTimeout(() => validateDirectorCode(value), 500)
+        return () => clearTimeout(timeoutId)
+      } else {
+        setDirectorCodeValidation({ status: 'idle' })
+      }
+    }
+  }
+
+  const validateDirectorCode = async (code: string) => {
+    if (!code || code.length < 3) return
+    
+    setDirectorCodeValidation({ status: 'validating' })
+    
+    try {
+      const response = await fetch(`/api/validate-director-code?code=${encodeURIComponent(code)}`)
+      const data = await response.json()
+      
+      if (data.valid) {
+        setDirectorCodeValidation({
+          status: 'valid',
+          message: `Verbonden met ${data.directorName}`
+        })
+      } else {
+        setDirectorCodeValidation({
+          status: 'invalid',
+          message: 'Code niet gevonden of verlopen'
+        })
+      }
+    } catch (error) {
+      setDirectorCodeValidation({
+        status: 'invalid',
+        message: 'Kon code niet valideren'
+      })
+    }
   }
 
   const handleNext = () => {
@@ -201,6 +246,65 @@ export function FamilyOnboarding() {
                       placeholder="Bijvoorbeeld urgentie, speciale omstandigheden, etc."
                       rows={4}
                     />
+                  </div>
+
+                  {/* Director Code Section */}
+                  <div className="border border-gray-200 rounded-lg p-4 space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="hasDirectorCode"
+                        checked={formData.hasDirectorCode}
+                        onCheckedChange={(checked) => handleInputChange("hasDirectorCode", !!checked)}
+                      />
+                      <Label htmlFor="hasDirectorCode" className="font-medium">
+                        Ik heb een code van een uitvaartondernemer
+                      </Label>
+                    </div>
+                    
+                    {formData.hasDirectorCode && (
+                      <div className="space-y-2">
+                        <Label htmlFor="directorCode">Uitvaartondernemer code</Label>
+                        <div className="relative">
+                          <Input
+                            id="directorCode"
+                            value={formData.directorCode}
+                            onChange={(e) => handleInputChange("directorCode", e.target.value)}
+                            placeholder="Bijvoorbeeld: VDB-2024-001"
+                            className={`pr-10 ${
+                              directorCodeValidation.status === 'valid' ? 'border-green-500' :
+                              directorCodeValidation.status === 'invalid' ? 'border-red-500' : ''
+                            }`}
+                          />
+                          {directorCodeValidation.status === 'validating' && (
+                            <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 animate-spin text-gray-400" />
+                          )}
+                          {directorCodeValidation.status === 'valid' && (
+                            <CheckCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-green-500" />
+                          )}
+                          {directorCodeValidation.status === 'invalid' && (
+                            <AlertCircle className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-red-500" />
+                          )}
+                        </div>
+                        {directorCodeValidation.message && (
+                          <p className={`text-xs ${
+                            directorCodeValidation.status === 'valid' ? 'text-green-600' : 'text-red-600'
+                          }`}>
+                            {directorCodeValidation.message}
+                          </p>
+                        )}
+                        <p className="text-xs text-gray-500">
+                          Deze code hebben ontvangen van uw uitvaartondernemer. Door deze in te voeren, 
+                          kunnen zij direct uw intake bekijken en u beter begeleiden.
+                        </p>
+                      </div>
+                    )}
+                    
+                    {!formData.hasDirectorCode && (
+                      <p className="text-xs text-gray-500">
+                        Geen zorgen! U kunt ook zonder code verder. We verbinden u later met 
+                        passende uitvaartondernemers in uw omgeving.
+                      </p>
+                    )}
                   </div>
 
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">

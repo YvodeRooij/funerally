@@ -9,11 +9,11 @@
       "unit_tests": 4,
       "integration_tests": 1,
       "files": [
-        "/workspaces/funerally/tests/api/family/unit/profile.test.ts",
-        "/workspaces/funerally/tests/api/family/unit/bookings.test.ts", 
-        "/workspaces/funerally/tests/api/family/unit/documents.test.ts",
-        "/workspaces/funerally/tests/api/family/unit/chat.test.ts",
-        "/workspaces/funerally/tests/api/family/integration/family-workflow.test.ts"
+        "/workspaces/farewelly/tests/api/family/unit/profile.test.ts",
+        "/workspaces/farewelly/tests/api/family/unit/bookings.test.ts", 
+        "/workspaces/farewelly/tests/api/family/unit/documents.test.ts",
+        "/workspaces/farewelly/tests/api/family/unit/chat.test.ts",
+        "/workspaces/farewelly/tests/api/family/integration/family-workflow.test.ts"
       ],
       "endpoints_covered": [
         "GET /(family)/api/profile",
@@ -50,8 +50,8 @@
       "unit_tests": 2,
       "integration_tests": 0,
       "files": [
-        "/workspaces/funerally/tests/api/director/unit/clients.test.ts",
-        "/workspaces/funerally/tests/api/director/unit/calendar.test.ts"
+        "/workspaces/farewelly/tests/api/director/unit/clients.test.ts",
+        "/workspaces/farewelly/tests/api/director/unit/calendar.test.ts"
       ],
       "endpoints_covered": [
         "GET /api/director/clients",
@@ -74,7 +74,7 @@
       "unit_tests": 1,
       "integration_tests": 0,
       "files": [
-        "/workspaces/funerally/tests/api/venue/unit/availability.test.ts"
+        "/workspaces/farewelly/tests/api/venue/unit/availability.test.ts"
       ],
       "endpoints_covered": [
         "GET /api/venue/availability",
@@ -90,11 +90,11 @@
   },
   "test_infrastructure": {
     "files_created": [
-      "/workspaces/funerally/tests/api/utils/test-setup.ts",
-      "/workspaces/funerally/tests/api/jest.config.js",
-      "/workspaces/funerally/tests/api/setup/jest-global-setup.ts",
-      "/workspaces/funerally/tests/api/setup/jest-global-teardown.ts",
-      "/workspaces/funerally/tests/api/setup/global-setup.ts"
+      "/workspaces/farewelly/tests/api/utils/test-setup.ts",
+      "/workspaces/farewelly/tests/api/jest.config.js",
+      "/workspaces/farewelly/tests/api/setup/jest-global-setup.ts",
+      "/workspaces/farewelly/tests/api/setup/jest-global-teardown.ts",
+      "/workspaces/farewelly/tests/api/setup/global-setup.ts"
     ],
     "features": [
       "Mock factories for all entity types",

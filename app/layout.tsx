@@ -12,7 +12,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Funerally - Modern Memorial Services",
+  title: "Farewelly - Modern Memorial Services",
   description: "Connecting families, funeral directors, and venues with compassion and technology",
 }
 

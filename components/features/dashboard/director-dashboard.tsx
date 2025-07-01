@@ -1,116 +1,175 @@
 "use client"
 
+import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calendar, Users, MessageSquare, FileText } from "lucide-react"
+import { Calendar, Users, MessageSquare, FileText, ArrowRight, Plus } from "lucide-react"
+import { DutchLegalComplianceWidget } from "@/components/director/compliance-overview-widget"
+import { NewClientInvitationModal } from "@/components/director/new-client-invitation-modal"
+import { PendingInvitationsWidget } from "@/components/director/pending-invitations-widget"
+import Link from "next/link"
 
 export function DirectorDashboard() {
+  const [isInvitationModalOpen, setIsInvitationModalOpen] = useState(false)
+
+  // Mock director data - in production, get from auth context
+  const directorInfo = {
+    id: "dir-001",
+    name: "Jan van der Berg"
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <Button>Nieuwe klant toevoegen</Button>
+    <div className="min-h-screen bg-gray-50 p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+          <p className="text-gray-500 mt-1">Overzicht van uw uitvaartdiensten</p>
+        </div>
+        <div className="flex gap-3">
+          <Button variant="outline" className="rounded-xl px-4" asChild>
+            <Link href="/director/clients">
+              <Users className="h-4 w-4 mr-2" />
+              Cliënten
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Link>
+          </Button>
+          <Button 
+            onClick={() => setIsInvitationModalOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Nieuwe klant
+          </Button>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Actieve klanten</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">+2 deze maand</p>
-          </CardContent>
-        </Card>
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+        {/* Primary Column - Deadlines */}
+        <div className="xl:col-span-1">
+          <DutchLegalComplianceWidget />
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Afspraken vandaag</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">2 bevestigd</p>
-          </CardContent>
-        </Card>
+        {/* Secondary Column - Quick Stats */}
+        <div className="xl:col-span-2">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <Users className="w-5 h-5 text-blue-600" />
+                </div>
+              </div>
+              <div className="text-2xl font-semibold text-gray-900 mb-1">2</div>
+              <div className="text-sm text-gray-500">Verbonden families</div>
+            </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Nieuwe berichten</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">5</div>
-            <p className="text-xs text-muted-foreground">3 ongelezen</p>
-          </CardContent>
-        </Card>
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-green-600" />
+                </div>
+              </div>
+              <div className="text-2xl font-semibold text-gray-900 mb-1">1</div>
+              <div className="text-sm text-gray-500">Urgent vandaag</div>
+            </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Documenten</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">8 nieuw</p>
-          </CardContent>
-        </Card>
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                  <MessageSquare className="w-5 h-5 text-purple-600" />
+                </div>
+              </div>
+              <div className="text-2xl font-semibold text-gray-900 mb-1">1</div>
+              <div className="text-sm text-gray-500">Nieuw rapport</div>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-orange-600" />
+                </div>
+              </div>
+              <div className="text-2xl font-semibold text-gray-900 mb-1">1</div>
+              <div className="text-sm text-gray-500">Wacht op intake</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recente activiteit</CardTitle>
-            <CardDescription>Laatste updates van uw klanten</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
+      {/* Bottom Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Pending Invitations */}
+        <div className="lg:col-span-1">
+          <PendingInvitationsWidget 
+            directorId={directorInfo.id}
+            onInvitationUpdate={() => {
+              // Refresh dashboard data when invitations update
+              console.log('Invitations updated')
+            }}
+          />
+        </div>
+
+        {/* Recent Activity */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-full">
+            <div className="px-6 py-5 border-b border-gray-50">
+              <h3 className="text-lg font-semibold text-gray-900">Recente activiteit</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="flex items-center space-x-4 py-3">
+                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900">Familie van der Berg</p>
+                  <p className="text-xs text-gray-500">Intake rapport voltooid • Deadline vandaag</p>
+                </div>
+                <p className="text-xs text-gray-400">3u geleden</p>
+              </div>
+              <div className="flex items-center space-x-4 py-3">
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium">Familie van der Berg</p>
-                  <p className="text-xs text-muted-foreground">Nieuwe documenten geüpload</p>
+                  <p className="text-sm font-medium text-gray-900">Familie Jansen</p>
+                  <p className="text-xs text-gray-500">Verbonden via code UFV-2025-123456</p>
                 </div>
-                <p className="text-xs text-muted-foreground">2u geleden</p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">Familie Jansen</p>
-                  <p className="text-xs text-muted-foreground">Afspraak bevestigd</p>
-                </div>
-                <p className="text-xs text-muted-foreground">4u geleden</p>
+                <p className="text-xs text-gray-400">1 dag geleden</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Komende afspraken</CardTitle>
-            <CardDescription>Uw planning voor vandaag</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <div className="text-sm font-medium">10:00</div>
+        {/* Upcoming Appointments */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-full">
+            <div className="px-6 py-5 border-b border-gray-50">
+              <h3 className="text-lg font-semibold text-gray-900">Komende afspraken</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="flex items-center space-x-4 py-3">
+                <div className="text-sm font-medium text-gray-900 w-12">14:00</div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium">Familie Pietersen</p>
-                  <p className="text-xs text-muted-foreground">Eerste gesprek</p>
+                  <p className="text-sm font-medium text-gray-900">Familie van der Berg</p>
+                  <p className="text-xs text-gray-500">Urgente planning • Amsterdam</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="text-sm font-medium">14:30</div>
+              <div className="flex items-center space-x-4 py-3">
+                <div className="text-sm font-medium text-gray-900 w-12">16:30</div>
                 <div className="flex-1">
-                  <p className="text-sm font-medium">Familie de Wit</p>
-                  <p className="text-xs text-muted-foreground">Nazorg gesprek</p>
+                  <p className="text-sm font-medium text-gray-900">Familie Jansen</p>
+                  <p className="text-xs text-gray-500">Intake begeleiding • Rotterdam</p>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
+
+      {/* New Client Invitation Modal */}
+      <NewClientInvitationModal
+        isOpen={isInvitationModalOpen}
+        onClose={() => setIsInvitationModalOpen(false)}
+        directorId={directorInfo.id}
+        directorName={directorInfo.name}
+      />
     </div>
   )
 }

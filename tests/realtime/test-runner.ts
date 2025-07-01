@@ -364,7 +364,7 @@ export class RealTimeTestRunner {
             console.log(`   • ${rec}`)
         })
 
-        console.log(`\n📄 Report saved to: /workspaces/funerally/tests/realtime/test-report.json`)
+        console.log(`\n📄 Report saved to: /workspaces/farewelly/tests/realtime/test-report.json`)
         console.log(`📄 Memory key: swarm-testing-1750494292308/realtime/tests`)
         
         if (report.summary.successRate >= 95) {

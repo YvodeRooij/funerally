@@ -30,7 +30,7 @@ ANSWER STYLE:
     documenten: "Upload documents to the client dossier. Families automatically get access. Max 50MB per file.",
   },
 
-  fallbackResponse: "Technical issue. For direct support: 020-1234567 (office hours) or support@funerally.com",
+  fallbackResponse: "Technical issue. For direct support: 020-1234567 (office hours) or support@farewelly.com",
 }
 
 export default directorPromptsEN

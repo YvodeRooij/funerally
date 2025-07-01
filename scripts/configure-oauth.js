@@ -172,7 +172,7 @@ function displayStatus(env) {
 
 // Main function
 async function main() {
-  console.log('🔧 OAuth Configuration Tool for Funerally');
+  console.log('🔧 OAuth Configuration Tool for farewelly');
   console.log('==========================================\n');
 
   // Read environment variables

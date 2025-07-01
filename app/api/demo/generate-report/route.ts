@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
           chatHistory: [], // Demo mode has no chat history stored
           userProfile: {
             id: userId || 'demo-user-123',
-            email: 'demo@funerally.dev',
+            email: 'demo@farewelly.dev',
             user_type: 'family'
           }
         }

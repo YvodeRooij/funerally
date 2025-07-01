@@ -61,10 +61,10 @@ SUPABASE_ACCESS_TOKEN=your-supabase-access-token
 
 ```bash
 # Filesystem Server
-MCP_ALLOWED_DIRECTORIES=/workspaces/funerally,/tmp
+MCP_ALLOWED_DIRECTORIES=/workspaces/farewelly,/tmp
 
 # Memory Server
-MCP_MEMORY_STORE_PATH=/workspaces/funerally/.mcp/memory
+MCP_MEMORY_STORE_PATH=/workspaces/farewelly/.mcp/memory
 
 # Puppeteer Server
 MCP_PUPPETEER_HEADLESS=true
@@ -175,7 +175,7 @@ npx @modelcontextprotocol/server-memory test
 ## Directory Structure
 
 ```
-/workspaces/funerally/
+/workspaces/farewelly/
 ├── .mcp.json                 # MCP server configuration
 ├── .mcp/                     # MCP runtime directory
 │   ├── memory/              # Persistent memory storage

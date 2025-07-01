@@ -2,7 +2,7 @@
 
 /**
  * MCP Server Initialization Script
- * Sets up and configures MCP servers for the Funerally platform
+ * Sets up and configures MCP servers for the farewelly platform
  */
 
 const fs = require('fs');
@@ -278,7 +278,7 @@ function makeScriptsExecutable() {
 
 // Main initialization process
 async function main() {
-  console.log('🚀 MCP Server Initialization for Funerally Platform\n');
+  console.log('🚀 MCP Server Initialization for farewelly Platform\n');
   
   try {
     // Check environment

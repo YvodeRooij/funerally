@@ -7,7 +7,7 @@ This comprehensive security testing suite validates the security, compliance, an
 ## Test Structure
 
 ```
-/workspaces/funerally/tests/documents/
+/workspaces/farewelly/tests/documents/
 ├── README.md                           # This file
 ├── jest.config.js                      # Jest configuration
 ├── setup.ts                           # Test setup and security utilities

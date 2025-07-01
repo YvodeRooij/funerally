@@ -15,49 +15,49 @@
     "api_routes": {
       "pattern_applied": "Changed { params }: { params: { id: string } } to { params }: { params: Promise<{ id: string }> } and const id = params.id to const { id } = await params",
       "files_modified": [
-        "/workspaces/funerally/app/api/bookings/[id]/route.ts",
-        "/workspaces/funerally/app/api/director/clients/[id]/route.ts", 
-        "/workspaces/funerally/app/api/documents/[id]/route.ts",
-        "/workspaces/funerally/app/api/family/documents/[id]/route.ts",
-        "/workspaces/funerally/app/api/family/bookings/[id]/route.ts",
-        "/workspaces/funerally/app/api/payments/[id]/refund/route.ts"
+        "/workspaces/farewelly/app/api/bookings/[id]/route.ts",
+        "/workspaces/farewelly/app/api/director/clients/[id]/route.ts", 
+        "/workspaces/farewelly/app/api/documents/[id]/route.ts",
+        "/workspaces/farewelly/app/api/family/documents/[id]/route.ts",
+        "/workspaces/farewelly/app/api/family/bookings/[id]/route.ts",
+        "/workspaces/farewelly/app/api/payments/[id]/refund/route.ts"
       ],
       "functions_fixed": ["GET", "PUT", "DELETE", "POST"],
       "fixes_per_file": {
-        "/workspaces/funerally/app/api/bookings/[id]/route.ts": 3,
-        "/workspaces/funerally/app/api/director/clients/[id]/route.ts": 3,
-        "/workspaces/funerally/app/api/documents/[id]/route.ts": 3,
-        "/workspaces/funerally/app/api/family/documents/[id]/route.ts": 3,
-        "/workspaces/funerally/app/api/family/bookings/[id]/route.ts": 3,
-        "/workspaces/funerally/app/api/payments/[id]/refund/route.ts": 1
+        "/workspaces/farewelly/app/api/bookings/[id]/route.ts": 3,
+        "/workspaces/farewelly/app/api/director/clients/[id]/route.ts": 3,
+        "/workspaces/farewelly/app/api/documents/[id]/route.ts": 3,
+        "/workspaces/farewelly/app/api/family/documents/[id]/route.ts": 3,
+        "/workspaces/farewelly/app/api/family/bookings/[id]/route.ts": 3,
+        "/workspaces/farewelly/app/api/payments/[id]/refund/route.ts": 1
       }
     },
     "page_components": {
       "pattern_applied": "Changed server components to async, updated params interface to Promise<{...}>, and added const { id } = await params",
       "server_components_fixed": [
-        "/workspaces/funerally/app/[locale]/(dashboard)/director/clients/[id]/page.tsx",
-        "/workspaces/funerally/app/[locale]/features/venues/[id]/page.tsx",
-        "/workspaces/funerally/app/[locale]/features/venues/[id]/book/page.tsx"
+        "/workspaces/farewelly/app/[locale]/(dashboard)/director/clients/[id]/page.tsx",
+        "/workspaces/farewelly/app/[locale]/features/venues/[id]/page.tsx",
+        "/workspaces/farewelly/app/[locale]/features/venues/[id]/book/page.tsx"
       ],
       "client_components_skipped": [
-        "/workspaces/funerally/app/[locale]/(shared)/venues/[id]/page.tsx",
-        "/workspaces/funerally/app/[locale]/(shared)/venues/[id]/book/page.tsx",
-        "/workspaces/funerally/app/[locale]/(provider)/clients/[id]/page.tsx",
-        "/workspaces/funerally/app/[locale]/director/venues/[id]/page.tsx",
-        "/workspaces/funerally/app/[locale]/director/venues/[id]/book/page.tsx"
+        "/workspaces/farewelly/app/[locale]/(shared)/venues/[id]/page.tsx",
+        "/workspaces/farewelly/app/[locale]/(shared)/venues/[id]/book/page.tsx",
+        "/workspaces/farewelly/app/[locale]/(provider)/clients/[id]/page.tsx",
+        "/workspaces/farewelly/app/[locale]/director/venues/[id]/page.tsx",
+        "/workspaces/farewelly/app/[locale]/director/venues/[id]/book/page.tsx"
       ],
       "client_components_reason": "Client components use 'use client' directive and receive params as regular props, not Promises. They use useParams() hook instead."
     },
     "layout_components": {
       "pattern_applied": "Updated locale parameter destructuring to await params Promise",
       "files_modified": [
-        "/workspaces/funerally/app/[locale]/layout.tsx"
+        "/workspaces/farewelly/app/[locale]/layout.tsx"
       ],
       "changes": "Modified function signature and added const { locale } = await params"
     },
     "library_files": {
       "analyzed": [
-        "/workspaces/funerally/lib/documents/api/secure-endpoints.ts"
+        "/workspaces/farewelly/lib/documents/api/secure-endpoints.ts"
       ],
       "requires_changes": false,
       "reason": "Express-based API endpoints, not Next.js route handlers"

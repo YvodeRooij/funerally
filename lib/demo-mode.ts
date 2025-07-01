@@ -6,7 +6,7 @@ export const DEMO_MODE = {
   // Demo family user
   demoFamily: {
     id: 'demo-family-123',
-    email: 'demo-family@funerally.dev',
+    email: 'demo-family@farewelly.dev',
     name: 'Demo Familie',
     userType: 'family' as const,
     isDemo: true
@@ -15,7 +15,7 @@ export const DEMO_MODE = {
   // Demo director user  
   demoDirector: {
     id: 'demo-director-456',
-    email: 'demo-director@funerally.dev',
+    email: 'demo-director@farewelly.dev',
     name: 'Demo Uitvaartondernemer',
     userType: 'director' as const,
     company: 'Demo Uitvaartcentrum',

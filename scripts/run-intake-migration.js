@@ -121,7 +121,7 @@ async function provideMigrationInstructions() {
 }
 
 // Main execution
-console.log('🏥 Funerally Intake System - Database Setup')
+console.log('🏥 farewelly Intake System - Database Setup')
 console.log('==========================================\n')
 
 console.log('⚠️  Note: Direct SQL execution via Supabase client is limited.')

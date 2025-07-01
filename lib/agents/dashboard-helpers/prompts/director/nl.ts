@@ -30,7 +30,7 @@ ANTWOORD STIJL:
     documenten: "Upload documenten naar het klantdossier. Families krijgen automatisch toegang. Max 50MB per bestand.",
   },
 
-  fallbackResponse: "Technisch probleem. Voor directe ondersteuning: 020-1234567 (kantooruren) of support@funerally.nl",
+  fallbackResponse: "Technisch probleem. Voor directe ondersteuning: 020-1234567 (kantooruren) of support@farewelly.nl",
 }
 
 export default directorPromptsNL

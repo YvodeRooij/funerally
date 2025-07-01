@@ -3,24 +3,24 @@ const glob = require('glob');
 
 // Find all API route files
 const files = [
-  '/workspaces/funerally/app/api/venue/analytics/route.ts',
-  '/workspaces/funerally/app/api/venue/availability/route.ts',
-  '/workspaces/funerally/app/api/venue/bookings/route.ts',
-  '/workspaces/funerally/app/api/family/chat/rooms/route.ts',
-  '/workspaces/funerally/app/api/family/chat/route.ts',
-  '/workspaces/funerally/app/api/family/profile/route.ts',
-  '/workspaces/funerally/app/api/family/documents/route.ts',
-  '/workspaces/funerally/app/api/family/documents/[id]/route.ts',
-  '/workspaces/funerally/app/api/family/bookings/route.ts',
-  '/workspaces/funerally/app/api/family/bookings/[id]/route.ts',
-  '/workspaces/funerally/app/api/payments/route.ts',
-  '/workspaces/funerally/app/api/payments/[id]/refund/route.ts',
-  '/workspaces/funerally/app/api/payments/splits/route.ts',
-  '/workspaces/funerally/app/api/documents/route.ts',
-  '/workspaces/funerally/app/api/documents/[id]/route.ts',
-  '/workspaces/funerally/app/api/documents/share/route.ts',
-  '/workspaces/funerally/app/api/director/venues/route.ts',
-  '/workspaces/funerally/app/api/director/clients/route.ts'
+  '/workspaces/farewelly/app/api/venue/analytics/route.ts',
+  '/workspaces/farewelly/app/api/venue/availability/route.ts',
+  '/workspaces/farewelly/app/api/venue/bookings/route.ts',
+  '/workspaces/farewelly/app/api/family/chat/rooms/route.ts',
+  '/workspaces/farewelly/app/api/family/chat/route.ts',
+  '/workspaces/farewelly/app/api/family/profile/route.ts',
+  '/workspaces/farewelly/app/api/family/documents/route.ts',
+  '/workspaces/farewelly/app/api/family/documents/[id]/route.ts',
+  '/workspaces/farewelly/app/api/family/bookings/route.ts',
+  '/workspaces/farewelly/app/api/family/bookings/[id]/route.ts',
+  '/workspaces/farewelly/app/api/payments/route.ts',
+  '/workspaces/farewelly/app/api/payments/[id]/refund/route.ts',
+  '/workspaces/farewelly/app/api/payments/splits/route.ts',
+  '/workspaces/farewelly/app/api/documents/route.ts',
+  '/workspaces/farewelly/app/api/documents/[id]/route.ts',
+  '/workspaces/farewelly/app/api/documents/share/route.ts',
+  '/workspaces/farewelly/app/api/director/venues/route.ts',
+  '/workspaces/farewelly/app/api/director/clients/route.ts'
 ];
 
 files.forEach(filePath => {

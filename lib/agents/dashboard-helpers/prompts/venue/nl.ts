@@ -30,7 +30,7 @@ ANTWOORD STIJL:
     statistieken: "Bekijk je dashboard voor bezettingsgraad, omzet en populaire diensten. Export data voor eigen analyse.",
   },
 
-  fallbackResponse: "Systeem tijdelijk onbereikbaar. Voor venue support: 020-9876543 of venues@funerally.nl",
+  fallbackResponse: "Systeem tijdelijk onbereikbaar. Voor venue support: 020-9876543 of venues@farewelly.nl",
 }
 
 export default venuePromptsNL

@@ -37,7 +37,7 @@ export default function UnifiedAuthPage() {
   useEffect(() => {
     const detectReturningUser = () => {
       try {
-        const stored = localStorage.getItem('funerally_user_preference')
+        const stored = localStorage.getItem('farewelly_user_preference')
         if (stored) {
           const userData: ReturningUser = JSON.parse(stored)
           // Check if data is less than 30 days old
@@ -131,7 +131,7 @@ export default function UnifiedAuthPage() {
       userType,
       lastSeen: Date.now()
     }
-    localStorage.setItem('funerally_user_preference_type', JSON.stringify(preference))
+    localStorage.setItem('farewelly_user_preference_type', JSON.stringify(preference))
   }
 
   const handleOAuthSignIn = async (provider: "google" | "linkedin") => {
@@ -179,13 +179,13 @@ export default function UnifiedAuthPage() {
       userType: selectedUserType,
       lastSeen: Date.now()
     }
-    localStorage.setItem('funerally_user_preference', JSON.stringify(returningUserData))
+    localStorage.setItem('farewelly_user_preference', JSON.stringify(returningUserData))
     
     router.push(`/dashboard?type=${selectedUserType}`)
   }
 
   const handleNewAccount = () => {
-    localStorage.removeItem('funerally_user_preference')
+    localStorage.removeItem('farewelly_user_preference')
     setReturningUser(null)
     setCurrentStep("usertype")
   }
